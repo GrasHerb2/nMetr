@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MetrBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Actions">
+    <Key>
+      <PropertyRef Name="Action_ID" />
+    </Key>
+    <Property Name="Action_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ActionDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ActionText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ComputerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Actions_User" FromRole="Actions" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Device">
+    <Key>
+      <PropertyRef Name="Device_ID" />
+    </Key>
+    <Property Name="Device_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FNum" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MetrData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IDObject" Type="Int32" Nullable="false" />
+    <Property Name="Param" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ExpDate" Type="DateTime" Precision="0" />
+    <Property Name="NoteText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Removed" Type="Boolean" />
+    <Property Name="PPR_Removed" Type="Boolean" />
+    <Property Name="PPR_Period" Type="Int32" />
+    <NavigationProperty Name="Object" Relationship="Self.FK_Device_Object" FromRole="Device" ToRole="Object" />
+    <NavigationProperty Name="OperationDevice" Relationship="Self.FK_OperationDevice_Device" FromRole="Device" ToRole="OperationDevice" />
+    <Property Name="Hidden" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="Object">
+    <Key>
+      <PropertyRef Name="Object_ID" />
+    </Key>
+    <Property Name="Object_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Device" Relationship="Self.FK_Device_Object" FromRole="Object" ToRole="Device" />
+  </EntityType>
+  <EntityType Name="Operation">
+    <Key>
+      <PropertyRef Name="Operation_ID" />
+    </Key>
+    <Property Name="Operation_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OperationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="OperationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ComputerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ID_Type" Type="Int32" />
+    <Property Name="ID_Status" Type="Int32" />
+    <NavigationProperty Name="OperationStatus" Relationship="Self.FK_Operation_OperationStatus" FromRole="Operation" ToRole="OperationStatus" />
+    <NavigationProperty Name="OperationType" Relationship="Self.FK_Operation_OperationType" FromRole="Operation" ToRole="OperationType" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Operation_User" FromRole="Operation" ToRole="User" />
+    <NavigationProperty Name="OperationDevice" Relationship="Self.FK_OperationDevice_Operation" FromRole="Operation" ToRole="OperationDevice" />
+  </EntityType>
+  <EntityType Name="OperationDevice">
+    <Key>
+      <PropertyRef Name="ID_OperationDevice" />
+    </Key>
+    <Property Name="ID_OperationDevice" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ID_Operation" Type="Int32" Nullable="false" />
+    <Property Name="ID_Device" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Device" Relationship="Self.FK_OperationDevice_Device" FromRole="OperationDevice" ToRole="Device" />
+    <NavigationProperty Name="Operation" Relationship="Self.FK_OperationDevice_Operation" FromRole="OperationDevice" ToRole="Operation" />
+  </EntityType>
+  <EntityType Name="OperationStatus">
+    <Key>
+      <PropertyRef Name="ID_Status" />
+    </Key>
+    <Property Name="ID_Status" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Operation" Relationship="Self.FK_Operation_OperationStatus" FromRole="OperationStatus" ToRole="Operation" />
+  </EntityType>
+  <EntityType Name="OperationType">
+    <Key>
+      <PropertyRef Name="ID_Type" />
+    </Key>
+    <Property Name="ID_Type" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Operation" Relationship="Self.FK_Operation_OperationType" FromRole="OperationType" ToRole="Operation" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="Role_ID" />
+    </Key>
+    <Property Name="Role_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="User" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="User_ID" />
+    </Key>
+    <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleID" Type="Int32" Nullable="false" />
+    <Property Name="FullName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ULogin" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="UPass" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Actions" Relationship="Self.FK_Actions_User" FromRole="User" ToRole="Actions" />
+    <NavigationProperty Name="Operation" Relationship="Self.FK_Operation_User" FromRole="User" ToRole="Operation" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
+  </EntityType>
+  <Association Name="FK_Actions_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Actions" Type="Self.Actions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="User_ID" />
+      </Principal>
+      <Dependent Role="Actions">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Device_Object">
+    <End Role="Object" Type="Self.Object" Multiplicity="1" />
+    <End Role="Device" Type="Self.Device" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Object">
+        <PropertyRef Name="Object_ID" />
+      </Principal>
+      <Dependent Role="Device">
+        <PropertyRef Name="IDObject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationDevice_Device">
+    <End Role="Device" Type="Self.Device" Multiplicity="1" />
+    <End Role="OperationDevice" Type="Self.OperationDevice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Device">
+        <PropertyRef Name="Device_ID" />
+      </Principal>
+      <Dependent Role="OperationDevice">
+        <PropertyRef Name="ID_Device" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Operation_OperationStatus">
+    <End Role="OperationStatus" Type="Self.OperationStatus" Multiplicity="0..1" />
+    <End Role="Operation" Type="Self.Operation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationStatus">
+        <PropertyRef Name="ID_Status" />
+      </Principal>
+      <Dependent Role="Operation">
+        <PropertyRef Name="ID_Status" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Operation_OperationType">
+    <End Role="OperationType" Type="Self.OperationType" Multiplicity="0..1" />
+    <End Role="Operation" Type="Self.Operation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OperationType">
+        <PropertyRef Name="ID_Type" />
+      </Principal>
+      <Dependent Role="Operation">
+        <PropertyRef Name="ID_Type" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Operation_User">
+    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="Operation" Type="Self.Operation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="User_ID" />
+      </Principal>
+      <Dependent Role="Operation">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OperationDevice_Operation">
+    <End Role="Operation" Type="Self.Operation" Multiplicity="1" />
+    <End Role="OperationDevice" Type="Self.OperationDevice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Operation">
+        <PropertyRef Name="Operation_ID" />
+      </Principal>
+      <Dependent Role="OperationDevice">
+        <PropertyRef Name="ID_Operation" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_User_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="Role_ID" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="RoleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MetrBaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Actions" EntityType="Self.Actions" />
+    <EntitySet Name="Device" EntityType="Self.Device" />
+    <EntitySet Name="Object" EntityType="Self.Object" />
+    <EntitySet Name="Operation" EntityType="Self.Operation" />
+    <EntitySet Name="OperationDevice" EntityType="Self.OperationDevice" />
+    <EntitySet Name="OperationStatus" EntityType="Self.OperationStatus" />
+    <EntitySet Name="OperationType" EntityType="Self.OperationType" />
+    <EntitySet Name="Role" EntityType="Self.Role" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="User" EntityType="Self.User" />
+    <AssociationSet Name="FK_Actions_User" Association="Self.FK_Actions_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Actions" EntitySet="Actions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Device_Object" Association="Self.FK_Device_Object">
+      <End Role="Object" EntitySet="Object" />
+      <End Role="Device" EntitySet="Device" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationDevice_Device" Association="Self.FK_OperationDevice_Device">
+      <End Role="Device" EntitySet="Device" />
+      <End Role="OperationDevice" EntitySet="OperationDevice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Operation_OperationStatus" Association="Self.FK_Operation_OperationStatus">
+      <End Role="OperationStatus" EntitySet="OperationStatus" />
+      <End Role="Operation" EntitySet="Operation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Operation_OperationType" Association="Self.FK_Operation_OperationType">
+      <End Role="OperationType" EntitySet="OperationType" />
+      <End Role="Operation" EntitySet="Operation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Operation_User" Association="Self.FK_Operation_User">
+      <End Role="User" EntitySet="User" />
+      <End Role="Operation" EntitySet="Operation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OperationDevice_Operation" Association="Self.FK_OperationDevice_Operation">
+      <End Role="Operation" EntitySet="Operation" />
+      <End Role="OperationDevice" EntitySet="OperationDevice" />
+    </AssociationSet>
+    <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="User" EntitySet="User" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

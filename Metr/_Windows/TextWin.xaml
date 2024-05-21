@@ -1,0 +1,16 @@
+﻿<Window x:Class="Metr._Windows.TextWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Metr._Windows"
+        mc:Ignorable="d"
+        Title="TextWin" Height="148" Width="300" ResizeMode="NoResize">
+    <Viewbox>
+        <StackPanel>
+            <Label x:Name="mainLbl" Content="А"/>
+            <TextBox x:Name="inputTxt" Width="250" Margin="5"/>
+            <Button x:Name="acceptBtn" Content="Сохранить" Height="50" Margin="50,0" Background="Transparent" Click="acceptBtn_Click"/>
+        </StackPanel>
+    </Viewbox>
+</Window>

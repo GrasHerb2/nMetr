@@ -1,0 +1,50 @@
+﻿<Window x:Class="Metr.DeviceWin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Metr"
+        mc:Ignorable="d"
+        Title="Добавление" ResizeMode="NoResize" Height="470" Width="345">
+
+    <Viewbox>
+        <Grid Width="350">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Click="WindowPin_Click" x:Name="WindowPin" Grid.Column="2" Height="25" Width="25" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Background="Transparent" Content="📌"/>
+            <StackPanel Margin="5" Grid.Column="1">
+                <Label Content="Название прибора*"/>
+                <TextBox Width="200" x:Name="nameTxt"/>
+
+                <Label Content="Заводской номер"/>
+                <TextBox Width="200" x:Name="numTxt"/>
+
+                <Label Content="Объект*"/>
+                <ComboBox IsEditable="True" Width="200" x:Name="objectCB" DisplayMemberPath="Name"/>
+
+                <Label Content="Измеряемый параметр"/>
+                <TextBox TextWrapping="Wrap" Width="200" x:Name="paramTxt" Height="40"/>
+
+                <Label Content="Единицы измерения"/>
+                <TextBox Width="200" x:Name="metrDataTxt"/>
+
+                <Label Content="Срок годности"/>
+                <DatePicker Width="200" x:Name="expDatePicker"/>
+
+                <Label Content="Период"/>
+                <TextBox Width="200" x:Name="periodTxt"/>
+
+                <Label Content="Примечание"/>
+                <TextBox TextWrapping="Wrap" Height="40" Width="200" x:Name="noteTxt"/>
+
+                <CheckBox Margin="5" Content="Исключен из ППР" x:Name="chbPPR"/>
+
+                <Button Margin="10" Content="Сохранить" x:Name="saveBtn" Click="saveBtn_Click"/>
+
+            </StackPanel>
+        </Grid>
+    </Viewbox>
+</Window>

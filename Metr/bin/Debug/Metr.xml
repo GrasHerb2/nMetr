@@ -1,0 +1,426 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Metr</name>
+    </assembly>
+    <members>
+        <member name="F:Metr.Classes.UControl.context">
+            <summary>
+            Контекст БД
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.UControl.UserData">
+            <summary>
+            Список пользователей имеющих доступ к системе
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.UControl.UserDataDeactive">
+            <summary>
+            Список пользователей с деактивированной учётной записью
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.UControl.UserDataRegister">
+            <summary>
+            Список пользователей запрашивающих доступ к системе
+            </summary>
+        </member>
+        <member name="M:Metr.Classes.UControl.UpdateUsers(Metr.MetrBaseEntities)">
+            <summary>
+            Метод обновления списков пользователей
+            </summary>
+            <param name="con">Контекст БД</param>
+        </member>
+        <member name="M:Metr.Classes.UControl.Sha256Coding(System.String)">
+            <summary>
+            Кодирование строки в хеш-код SHA256
+            </summary>
+            <param name="line">Входящая строка для кодирования</param>
+            <returns>Хеш-код SHA256</returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.passwCheck(System.String,System.String)">
+            <summary>
+            Метод авторизации
+            </summary>
+            <param name="login">Логин пользователя</param>
+            <param name="passw">Пароль пользователя</param>
+            <returns>
+            Коды результата проверок:
+            2   Учетная запись отключена;
+            1   Учетная запись не подтверждена;
+            0   Успешный вход;
+            -1  Несовпадение пароля;
+            -2  Отсутсвие учётной записи с указаным логином;
+            -3  Невозможность получения данных из базы;
+            </returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.newEmployee(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Создание нового пользователя
+            </summary>
+            <param name="newLogin">Логин нового пользователя</param>
+            <param name="newPass">Пароль нового пользователя</param>
+            <param name="newFullName">ФИО нового пользователя</param>
+            <param name="newMail">Электронная почта нового пользователя (опционально)</param>
+            <returns>Возвращает класс tResult который содержит объект нового пользователя, запись в журнал аудита и код операции:   1=Пользователь с таким логином уже записан в БД;    0=Операця успешна   -1=Ошибка доступа к БД или иное</returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.deactiveEmp(System.Int32,System.Int32)">
+            <summary>
+            Деактивация учётной записи пользователя
+            </summary>
+            <param name="delIndex">Логин отключаемой учётной записи</param>
+            <param name="admIndex">Логин учётной записи диактивирующего</param>
+            <returns>Возвращает объект класса tResult хранящий объект отключенной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка отключения</returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.recoverEmp(System.Int32,System.Int32)">
+            <summary>
+            Восстановление учётной записи пользователя
+            </summary>
+            <param name="delLogin">Логин восстанавливаемой учётной записи</param>
+            <param name="admLogin">Логин учётной записи восстанавливающего</param>
+            <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.activateEmp(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Активация учётной записи пользователя
+            </summary>
+            <param name="delLogin">Логин активируемой учётной записи</param>
+            <param name="admLogin">Логин учётной записи активирующего</param>
+            <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
+        </member>
+        <member name="T:Metr.Classes.UControl.tResult">
+            <summary>
+            Класс результата операции работы с учётными записями.
+            </summary>
+        </member>
+        <member name="T:Metr.Classes.CurrentUser">
+            <summary>
+            Класс для пользователя авторизованного в системе
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.deviceList">
+            <summary>
+            Содержит все приборы в БД
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.deviceListMain">
+            <summary>
+            Содержит все не исключённые приборы в БД
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.deviceListPPR">
+            <summary>
+            Содержит приборы для ППР
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.deviceListExc">
+            <summary>
+            Содержит все исключённые приборы в БД
+            </summary>
+        </member>
+        <member name="P:Metr.Classes.DeviceData.infoMain">
+            <summary>
+            Строка результата главной таблицы
+            </summary>
+        </member>
+        <member name="P:Metr.Classes.DeviceData.infoPPR">
+            <summary>
+            Строка результата таблицы ППР
+            </summary>
+        </member>
+        <member name="P:Metr.Classes.DeviceData.infoExc">
+            <summary>
+            Строка результата таблицы исключённых приборов
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.actions">
+            <summary>
+            Список действий для записи в БД последнего использовавшегося метода
+            </summary>
+        </member>
+        <member name="F:Metr.Classes.DeviceData.devices">
+            <summary>
+            Список для класса Device в БД
+            </summary>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.dataUpdate(System.Int32)">
+            <summary>
+            Метод для обновления набора данных.
+            </summary>
+            <param name="pprYear">Если 0, приравнивается к текущему году. По умолчанию = 0 (выбирает год текущей даты)</param>
+            <returns>Возвращает deviceList содержащий все приборы в БД</returns>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.Search(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.DateTime,System.DateTime,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Метод поиска приборов в БД
+            </summary>
+            <param name="dSearch">Номер, название</param>
+            <param name="objects">Объекты</param>
+            <param name="searchStart">Дата начального срока годности</param>
+            <param name="searchEnd">Дата крайнего срока годности</param>
+            <param name="Hid">Отображение приборов скрытых из основного списка</param>
+            <param name="Del">Отображение исключённых приборов</param>
+            <param name="pprDate">(Для ППР) Отображение только с ППР текущего месяца</param>
+            <param name="Exp">(Для Основного) Выделение даты просроченых приборов</param>
+            <returns>Возвращает deviceList</returns>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.NewDevice(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.Boolean,System.Int32)">
+            <summary>
+            Метод добавления нового прибора
+            </summary>
+            <param name="Name">Название</param>
+            <param name="ObjectName">Название объекта</param>
+            <param name="FNum">Заводской номер</param>
+            <param name="Param">Измеряемый параметр </param>
+            <param name="MetrData">Единицы измерения </param>
+            <param name="ExpDate">Срок годности </param>
+            <param name="Period">Период прохождения ППР </param>
+            <param name="NoteText">Примечания </param>
+            <param name="PPR">Отслеживание ППР </param>
+            <param name="user">Пользоваетль добавляющий прибор</param>
+            <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.DeviceEdit(Metr.Device,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Nullable{System.Boolean})">
+            <summary>
+            Метод изменения прибора
+            </summary>
+            <param name="dev">Начальный прибор класса Device</param>
+            <param name="Name">Название</param>
+            <param name="ObjectName">Название объекта</param>
+            <param name="FNum">Заводской номер</param>
+            <param name="Param">Измеряемый параметр</param>
+            <param name="MetrData">Единицы измерения</param>
+            <param name="ExpDate">Срок годности</param>
+            <param name="Period">Период прохождения ППР в месяцах</param>
+            <param name="NoteText">Примечание</param>
+            <param name="user">Пользователь, производящий изменение</param>
+            <param name="PPR">Прохождение ППР</param>
+            <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.deviceHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+            <summary>
+            Метод скрытия прибора
+            </summary>
+            <param name="devices">Скрываемые приборы</param>
+            <param name="context">Контекст БД</param>
+            <param name="user">Пользователь, скрывающий приборы</param>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.deviceUnHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+            <summary>
+            Метод расскрытия прибора
+            </summary>
+            <param name="devices">Расскрываемые приборы</param>
+            <param name="context">Контекст БД</param>
+            <param name="user">Пользователь, расскрывающий приборы</param>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.deviceDel(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+            <summary>
+            Метод удаления прибора
+            </summary>
+            <param name="devices">Удаляемые приборы</param>
+            <param name="context">Контекст БД</param>
+            <param name="user">Пользователь, удаляющий приборы</param>
+        </member>
+        <member name="M:Metr.Classes.DeviceData.deviceRec(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+            <summary>
+            Метод восстановления прибора
+            </summary>
+            <param name="devices">Восстановляемые приборы</param>
+            <param name="context">Контекст БД</param>
+            <param name="user">Пользователь, восстанавляющий приборы</param>
+        </member>
+        <member name="T:Metr.ActionsWindow">
+            <summary>
+            Логика взаимодействия для ActionsWindow.xaml
+            </summary>
+            <summary>
+            ActionsWindow
+            </summary>
+        </member>
+        <member name="M:Metr.ActionsWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.DeviceWin">
+            <summary>
+            Логика взаимодействия для NewDeviceWin.xaml
+            </summary>
+            <summary>
+            DeviceWin
+            </summary>
+        </member>
+        <member name="M:Metr.DeviceWin.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr._Windows.ExportWindow">
+            <summary>
+            Логика взаимодействия для ExcelExportWindow.xaml
+            </summary>
+            <summary>
+            ExportWindow
+            </summary>
+        </member>
+        <member name="M:Metr._Windows.ExportWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr._Windows.StatusWin">
+            <summary>
+            Логика взаимодействия для StatusWin.xaml
+            </summary>
+            <summary>
+            StatusWin
+            </summary>
+        </member>
+        <member name="M:Metr._Windows.StatusWin.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr._Windows.TextWin">
+            <summary>
+            Логика взаимодействия для TextWin.xaml
+            </summary>
+            <summary>
+            TextWin
+            </summary>
+        </member>
+        <member name="M:Metr._Windows.TextWin.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.RegWindow">
+            <summary>
+            Логика взаимодействия для RegWindow.xaml
+            </summary>
+            <summary>
+            RegWindow
+            </summary>
+        </member>
+        <member name="M:Metr.RegWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.UserActivate">
+            <summary>
+            Логика взаимодействия для UserActivate.xaml
+            </summary>
+            <summary>
+            UserActivate
+            </summary>
+        </member>
+        <member name="M:Metr.UserActivate.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.UserManagmentWindow">
+            <summary>
+            Логика взаимодействия для UserManagmentWindow.xaml
+            </summary>
+            <summary>
+            UserManagmentWindow
+            </summary>
+        </member>
+        <member name="M:Metr.UserManagmentWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.App">
+            <summary>
+            Логика взаимодействия для App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Metr.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Metr.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Metr.AuthWindow">
+            <summary>
+            Логика взаимодействия для AuthWindow.xaml
+            </summary>
+            <summary>
+            AuthWindow
+            </summary>
+        </member>
+        <member name="M:Metr.AuthWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.MainWindow">
+            <summary>
+            Логика взаимодействия для MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Metr.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr.Properties.Resources">
+            <summary>
+              Класс ресурсов со строгим типом для поиска локализованных строк и пр.
+            </summary>
+        </member>
+        <member name="P:Metr.Properties.Resources.ResourceManager">
+            <summary>
+              Возврат кэшированного экземпляра ResourceManager, используемого этим классом.
+            </summary>
+        </member>
+        <member name="P:Metr.Properties.Resources.Culture">
+            <summary>
+              Переопределяет свойство CurrentUICulture текущего потока для всех
+              подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>
