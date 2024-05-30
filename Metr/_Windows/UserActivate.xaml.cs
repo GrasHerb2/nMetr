@@ -25,7 +25,7 @@ namespace Metr
             InitializeComponent();
             infoText.Text = Info;
             roleCmb.Text = "Выберите доступ";
-            roleCmb.ItemsSource = MetrBaseEntities.GetContext().Role.Select(r=>r.Title).ToList();
+            roleCmb.ItemsSource = MetrBaseEn.GetContext().Role.Select(r=>r.Title).ToList();
         }
 
         private void cancelBtn_Click(object sender, RoutedEventArgs e)

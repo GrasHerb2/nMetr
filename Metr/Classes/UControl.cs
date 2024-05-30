@@ -20,7 +20,7 @@ namespace Metr.Classes
         /// <summary>
         /// Контекст БД
         /// </summary>
-        static MetrBaseEntities context = MetrBaseEntities.GetContext();
+        static MetrBaseEn context = MetrBaseEn.GetContext();
         /// <summary>
         /// Список пользователей имеющих доступ к системе
         /// </summary>
@@ -38,7 +38,7 @@ namespace Metr.Classes
         /// Метод обновления списков пользователей
         /// </summary>
         /// <param name="con">Контекст БД</param>
-        public static void UpdateUsers(MetrBaseEntities con)
+        public static void UpdateUsers(MetrBaseEn con)
         {
             UserData.Clear();
             UserDataDeactive.Clear();
@@ -119,12 +119,12 @@ namespace Metr.Classes
 
                 if (passwCheck.ULogin.Contains("___")) return 2;
 
-                passw = Sha256Coding(passw);/*входящий пароль кодируется*/
+                passw = Sha256Coding(passw);//входящий пароль кодируется
                 if (passw == passwCheck.UPass /*пароль в базе*/ )
-                    return 0;//вход разрешён
-                else return -1;//пароль не совпадает
+                    return 0;
+                else return -1;
             }
-            catch { return -3; } //код -3 возникает при невозможности подключения к БД
+            catch { return -3; }
         }
         /// <summary>
         /// Создание нового пользователя
@@ -133,25 +133,34 @@ namespace Metr.Classes
         /// <param name="newPass">Пароль нового пользователя</param>
         /// <param name="newFullName">ФИО нового пользователя</param>
         /// <param name="newMail">Электронная почта нового пользователя (опционально)</param>
-        /// <returns>Возвращает класс tResult который содержит объект нового пользователя, запись в журнал аудита и код операции:   1=Пользователь с таким логином уже записан в БД;    0=Операця успешна   -1=Ошибка доступа к БД или иное</returns>
-        public static tResult newEmployee(string newLogin, string newPass, string newFullName, string newMail, bool instant = false)
+        /// <param name="instant">Создание записи без подтверждения администратором</param>
+        /// <param name="role">ID создаваемой записи, по стандарту "Гость"</param>
+        /// <returns>
+        /// Коды результатов:
+        /// 1=Пользователь с таким логином уже записан в БД;
+        /// 0=Операця успешна
+        /// -1=Ошибка доступа к БД или иное
+        /// </returns>
+        public static int newEmployee(string newLogin, string newPass, string newFullName, string newMail, bool instant = false, int role = 1)
         {
-            tResult result = new tResult();
+            int result = 0;
             try
             {
                 var a = Sha256Coding(newLogin);
                 if (context.User.Where(p => p.ULogin == a).Count() > 0)
                 {
-                    result.resultid = 1;
+                    result = 1;
                     return result;
                 }//в системе не может быть двух однинаковых логинов
 
-                result.Action = new Actions()
+                context.Operation.Add (new Operation()
                 {
-                    ActionDate = DateTime.Now,
+                    OperationDate = DateTime.Now,
                     UserID = 0,
-                    ActionText = "Запрос на регистрацию\nКомпьютер:" + Environment.MachineName.ToString() + "\nФИО:" + newFullName + "\n" + DateTime.Now.ToShortDateString(),
-                    ComputerName = Environment.MachineName.ToString()
+                    OperationText = "Регистрация\nКомпьютер:" + Environment.MachineName.ToString() + "\nФИО:" + newFullName + "\n" + DateTime.Now.ToShortDateString(),
+                    ComputerName = Environment.MachineName.ToString(),
+                    ID_Status = 2,
+                    ID_Type = 1
                 };
                 newLogin = Sha256Coding(newLogin);
                 newPass = Sha256Coding(newPass);
@@ -159,9 +168,9 @@ namespace Metr.Classes
                 {
                     FullName = newFullName,
                     ULogin = newLogin,
-                    RoleID = 1,//неподтверждённый пользователь может использовать только просмотр
+                    RoleID = role,//по стандарту будет роль "Гость"
                     Email = newMail,
-                    UPass = (instant ? "" : "___" )+ newPass
+                    UPass = (instant ? "" : "___" )+ newPass//instant - мгновенное создание записи администратором
                 };
 
                 result.resultid = 0;
@@ -172,7 +181,7 @@ namespace Metr.Classes
             catch (System.Exception ex)
             {
                 result.resultid = -1;
-                result.Action = new Actions() { ActionText = ex.Message.ToString() };
+                result.Operation = new Operation() { OperationText = ex.Message.ToString() };
                 return result;
             }
         }
@@ -189,7 +198,7 @@ namespace Metr.Classes
             {
                 User deluser = context.User.Where(p => p.User_ID == delIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
-                result.Action = new Actions()
+                result.Operation = new Actions()
                 {
                     UserID = admuser.User_ID,
                     ActionDate = DateTime.Now,
@@ -215,9 +224,8 @@ namespace Metr.Classes
         /// <param name="delLogin">Логин восстанавливаемой учётной записи</param>
         /// <param name="admLogin">Логин учётной записи восстанавливающего</param>
         /// <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
-        public static tResult recoverEmp(int recIndex, int admIndex)
+        public static string recoverEmp(int recIndex, int admIndex)
         {
-            tResult result = new tResult();
             try
             {
                 User recuser = context.User.Where(p => p.User_ID == recIndex).FirstOrDefault();
@@ -255,13 +263,6 @@ namespace Metr.Classes
             tResult result = new tResult();
                 User actuser = context.User.Where(p => p.User_ID == actIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
-                result.Action = new Actions()
-                {
-                    UserID = admuser.User_ID,
-                    ActionDate = DateTime.Now,
-                    ComputerName = Environment.MachineName.ToString(),
-                    ActionText = admuser.FullName + " активировал учётную запись " + actuser.FullName
-                };
 
                 actuser.UPass = actuser.UPass.Remove(0, 3);
                 actuser.RoleID = role;
@@ -271,15 +272,6 @@ namespace Metr.Classes
                 result.resultid = 0;
 
                 return result;
-        }
-        /// <summary>
-        /// Класс результата операции работы с учётными записями.
-        /// </summary>
-        public class tResult
-        {
-            public int resultid { get; set; }
-            public User User { get; set; }
-            public Actions Action { get; set; }
         }
     }
 }

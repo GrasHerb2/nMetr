@@ -42,6 +42,8 @@
                     <DataGrid Style="{StaticResource MainGrid}" x:Name="deviceGrid" RowEditEnding="deviceGrid_RowEditEnding">
                         <DataGrid.ContextMenu>
                                 <ContextMenu>
+                                    <MenuItem x:Name="cHist" Header="История изменений" Click="cHist_Click"/>
+                                    <Separator/>
                                     <MenuItem x:Name="cExp" Header="Быстрый экспорт" Click="cExp_Click"/>
                                     <Separator/>
                                     <MenuItem x:Name="cEdit" Header="Редактирование" Click="contextEdit_Click"/>
@@ -247,7 +249,8 @@
 
                         <DataGrid.ContextMenu>
                             <ContextMenu>
-                                <MenuItem x:Name="cRec" Header="Вернуть" Click="cRec_Click"/>
+                               <MenuItem x:Name="cExcHist" Header="История изменений" Click="cHist_Click"/>
+                               <MenuItem x:Name="cRec" Header="Вернуть" Click="cRec_Click"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
 

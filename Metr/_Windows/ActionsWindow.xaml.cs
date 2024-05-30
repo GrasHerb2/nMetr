@@ -21,8 +21,10 @@ namespace Metr
     public partial class ActionsWindow : Window
     {
         List<Actions> actionsList;
-        MetrBaseEntities context = MetrBaseEntities.GetContext();
+        MetrBaseEn context = MetrBaseEn.GetContext();
         public int userID { get; set; }
+
+        int preCount = 0;
         public ActionsWindow(int uID = 0)
         {
             InitializeComponent();
@@ -39,6 +41,7 @@ namespace Metr
         void Update()
         {
             actionsList = context.Actions.ToList();
+            preCount = actionsList.Count();
             if (searchTBFN.Text != "")
                 actionsList = actionsList.Where(a => a.User.FullName == searchTBFN.Text).ToList();
 

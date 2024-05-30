@@ -39,7 +39,7 @@ namespace Metr
                     try
                     {
                         string log = UControl.Sha256Coding(loginTxt.Text);
-                        User u0 = MetrBaseEntities.GetContext().User.Where(q => q.ULogin == log).FirstOrDefault();
+                        User u0 = MetrBaseEn.GetContext().User.Where(q => q.ULogin == log).FirstOrDefault();
                         authUser = new CurrentUser() { Id = u0.User_ID, FullName = u0.FullName, RoleID = u0.RoleID };
 
                         if (logSaveRB.IsChecked.Value) SettingsClass.SaveLogin(loginTxt.Text);
@@ -96,6 +96,11 @@ namespace Metr
                 else
                     (e.Source as Control).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
+        }
+
+        private void recBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

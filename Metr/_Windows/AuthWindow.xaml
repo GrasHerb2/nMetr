@@ -15,7 +15,8 @@
             <PasswordBox Width="150" x:Name="passTxt" TabIndex="3"/>
             <Button Margin="10" Content="Вход" x:Name="entBtn" BorderBrush="White" Background="White" Click="entBtn_Click" TabIndex="4"/>
             <Button Margin="10,10,10,0" Content="Только просмотр" x:Name="readBtn" BorderBrush="White" Background="White" Click="readBtn_Click"/>
-            <Button Margin="10" Content="Запрос на регистрацию" x:Name="regBtn" BorderBrush="White" Background="White" Click="regBtn_Click"/>
+            <Button Margin="10,10,10,0" Content="Запрос на регистрацию" x:Name="regBtn" BorderBrush="White" Background="White" Click="regBtn_Click"/>
+            <Button Margin="10" Content="Восстановление пароля" x:Name="recBtn" BorderBrush="White" Background="White" Click="recBtn_Click"/>
             </StackPanel>
     </Viewbox>
 </Window>

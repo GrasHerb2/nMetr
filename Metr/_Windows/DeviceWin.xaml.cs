@@ -15,7 +15,7 @@ namespace Metr
 
         public List<Actions> actions { get; set; }
         public CurrentUser User { get; set; }
-        MetrBaseEntities context = MetrBaseEntities.GetContext();
+        MetrBaseEn context = MetrBaseEn.GetContext();
         public Device dev;
         public DeviceWin(bool adding = true, int i = 0)
         {
@@ -55,7 +55,7 @@ namespace Metr
 
             if (add)
             {
-                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, periodTxt.Text.Replace(':', ' ').Replace('+',' '), noteTxt.Text, chbPPR.IsChecked.Value, User.Id))
+                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, chbPPR.IsChecked.Value, User.Id))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;
@@ -69,7 +69,7 @@ namespace Metr
             }
             else 
             {
-                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, User.Id,!chbPPR.IsChecked.Value))
+                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, User.Id,chbPPR.IsChecked.Value))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;

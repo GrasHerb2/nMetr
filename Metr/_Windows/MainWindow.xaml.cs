@@ -15,7 +15,7 @@ namespace Metr
     /// </summary>
     public partial class MainWindow : Window
     {
-        MetrBaseEntities context = MetrBaseEntities.GetContext();
+        MetrBaseEn context = MetrBaseEn.GetContext();
         
         List<string> objNames = new List<string>();
         List<string> dSearch = new List<string>();
@@ -92,7 +92,7 @@ namespace Metr
             {
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    objNames = MetrBaseEntities.GetContext().Object.Select(o => o.Name).ToList();
+                    objNames = MetrBaseEn.GetContext().Object.Select(o => o.Name).ToList();
                     pBar.Visibility = Visibility.Visible;
                 }));
 
@@ -212,13 +212,17 @@ namespace Metr
             {
                 if (User.RoleID >= 2)
                 {
-                    List<Device> devices = new List<Device>();
+                    List<Device> devicesDel = new List<Device>();
+                    List<Device> devicesRec = new List<Device>();
                     foreach (DeviceData d in deviceGrid.SelectedItems)
                     {
-                        devices.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
+                        if (!d.Delete)
+                            devicesDel.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
+                        else
+                            devicesRec.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
                     }
-                    DeviceData.deviceDel(devices, context, User.Id);
-                    DeviceData.deviceUnHide(devices, context, User.Id);
+                    if (devicesDel.Count() > 0) DeviceData.deviceDel(devicesDel, context, User.Id);
+                    if (devicesRec.Count() > 0) DeviceData.deviceRec(devicesRec, context, User.Id);
                 }
                 else MessageBox.Show("Для удаления необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -416,7 +420,7 @@ namespace Metr
 
         private void infoBtn_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Metr 2901 - программа предназначенная для ведения журнала приборов, отслеживания их срока годности и составления журнала ППР.\nРазработчик: Асонов Г.С.", "О программе", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("nMetr - программа предназначенная для ведения журнала приборов, отслеживания их срока годности и составления журнала ППР.\nРазработчик: Асонов Г.С.\nДанная находится на стадии разработки и не отображает коечный результат.", "О программе", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void signOutBtn_Click(object sender, RoutedEventArgs e)
@@ -571,8 +575,19 @@ namespace Metr
         }
 
         private void cExp_Click(object sender, RoutedEventArgs e)
-        {            
-            EClass.Export(EClass.Presets[2], deviceGrid.SelectedItems as List<DeviceData>);
+        {
+            List<DeviceData> list = new List<DeviceData>();
+            foreach (DeviceData d in deviceGrid.SelectedItems)
+            {
+                list.Add(d);
+            }
+            EClass.Export(EClass.Presets[2], list);
+        }
+
+        private void cHist_Click(object sender, RoutedEventArgs e)
+        {
+            HistWindow histWindow = new HistWindow((deviceGrid.SelectedItems.Count>0? deviceGrid.SelectedItems[0] as DeviceData: excGrid.SelectedItems[0] as DeviceData).ID);
+            histWindow.Show();
         }
     }
 }

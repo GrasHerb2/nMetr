@@ -17,7 +17,7 @@ namespace Metr
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Device()
         {
-            this.OperationDevice = new HashSet<OperationDevice>();
+            this.Operation = new HashSet<Operation>();
         }
     
         public int Device_ID { get; set; }
@@ -29,12 +29,12 @@ namespace Metr
         public Nullable<System.DateTime> ExpDate { get; set; }
         public string NoteText { get; set; }
         public Nullable<bool> Removed { get; set; }
+        public Nullable<bool> Hidden { get; set; }
         public Nullable<bool> PPR_Removed { get; set; }
         public Nullable<int> PPR_Period { get; set; }
-        public Nullable<bool> Hidden { get; set; }
     
         public virtual Object Object { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OperationDevice> OperationDevice { get; set; }
+        public virtual ICollection<Operation> Operation { get; set; }
     }
 }

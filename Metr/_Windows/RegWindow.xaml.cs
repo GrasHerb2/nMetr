@@ -20,7 +20,7 @@ namespace Metr
     /// </summary>
     public partial class RegWindow : Window
     {
-        MetrBaseEntities context = MetrBaseEntities.GetContext();
+        MetrBaseEn context = MetrBaseEn.GetContext();
         public RegWindow()
         {
             InitializeComponent();

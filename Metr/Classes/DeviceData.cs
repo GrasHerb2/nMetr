@@ -5,7 +5,6 @@ using System.Windows;
 
 namespace Metr.Classes
 {
-   
     public class DeviceData
     {        
         public int ID { get; set; }
@@ -68,7 +67,7 @@ namespace Metr.Classes
         /// <summary>
         /// Список действий для записи в БД последнего использовавшегося метода
         /// </summary>
-        public static List<Actions> actions = new List<Actions>();
+        public static List<Operation> operations = new List<Operation>();
 
         /// <summary>
         /// Список для класса Device в БД
@@ -84,7 +83,7 @@ namespace Metr.Classes
         /// <returns>Возвращает deviceList содержащий все приборы в БД</returns>
         public static List<DeviceData> dataUpdate(int pprYear = 0)
         {
-            devices = MetrBaseEntities.GetContext().Device.ToList();
+            devices =  MetrBaseEn.GetContext().Device.ToList();
             deviceList.Clear();
             string note = "";
             foreach (Device d in devices)
@@ -321,13 +320,13 @@ namespace Metr.Classes
         /// <param name="PPR">Отслеживание ППР </param>
         /// <param name="user">Пользоваетль добавляющий прибор</param>
         /// <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
-        public static MessageBoxResult NewDevice(string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, string Period, string NoteText, bool PPR, int user)
+        public static MessageBoxResult NewDevice(string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, bool noPPR, int user)
         {
-            MetrBaseEntities context = MetrBaseEntities.GetContext();
+            MetrBaseEn context = MetrBaseEn.GetContext();
 
-            actions.Clear();
+            operations.Clear();
 
-            string tags = (!PPR ? "^noPPR^" : "") + (Period != "" ? "^per+" + Period + "^" : "");
+            int tempId = 0;
 
             string log = "";
 
@@ -340,7 +339,7 @@ namespace Metr.Classes
                 if (MessageBox.Show("В базе данных не был найден объект \"" + ObjectName + "\".\n Добавить новый объект в базу данных?", "Добавление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     context.Object.Add(new Object() { Name = ObjectName });
-                    actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Добавление объекта " + ObjectName, ComputerName = Environment.MachineName });
+                    operations.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Добавление объекта " + ObjectName, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 3});
                     context.SaveChanges();
                 }
                 else
@@ -353,7 +352,6 @@ namespace Metr.Classes
             switch (MessageBox.Show("Вы хотите добавить:\n\"" + log + "\"?", "Добавление", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
             {
                 case MessageBoxResult.Yes:
-
                     Device device = new Device()
                     {
                         FNum = FNum,
@@ -362,14 +360,17 @@ namespace Metr.Classes
                         Param = Param,
                         MetrData = MetrData,
                         ExpDate = ExpDate,
-                        NoteText = NoteText + ":" + tags
+                        NoteText = NoteText,
+                        Hidden = false,
+                        Removed = false,
+                        PPR_Removed = noPPR,
+                        PPR_Period = Period                     
                     };
-                    actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Добавление прибора\n" + log, ComputerName = Environment.MachineName });
-
-                    context.Actions.AddRange(actions);
                     context.Device.Add(device);
                     context.SaveChanges();
-
+                    tempId = context.Device.Last().Device_ID;
+                    context.Operation.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Добавление прибора\n" + log, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 3, ID_Device = tempId });
+                    context.SaveChanges();
                     return MessageBoxResult.Yes;
 
                 case MessageBoxResult.No:
@@ -397,7 +398,7 @@ namespace Metr.Classes
         /// <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
         public static MessageBoxResult DeviceEdit(Device dev, string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, int user, bool? PPR = null)
         {
-            MetrBaseEntities context = MetrBaseEntities.GetContext();
+            MetrBaseEn context = MetrBaseEn.GetContext();
 
             dev.NoteText = !string.IsNullOrEmpty(dev.NoteText) ? dev.NoteText : "";
 
@@ -413,7 +414,7 @@ namespace Metr.Classes
                 {
                     context.Object.Add(new Object() { Name = ObjectName });
                     context.SaveChanges();
-                    actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Добавление объекта " + ObjectName, ComputerName = Environment.MachineName });
+                    operations.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Добавление объекта " + ObjectName, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 3  });
                 }
                 else
                     return MessageBoxResult.Cancel;
@@ -461,12 +462,12 @@ namespace Metr.Classes
                     dev.Param = Param;
                     dev.IDObject = context.Object.Where(o => o.Name == ObjectName).FirstOrDefault().Object_ID;
                     dev.PPR_Period = Period;
-                    
 
-                    actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Изменение прибора " + dev.Name + "\n" + log, ComputerName = Environment.MachineName });
+                    context.SaveChanges();
 
-                    context.Actions.AddRange(actions);
+                    operations.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Изменение прибора " + dev.Name + "\n" + log, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 8, ID_Device = dev.Device_ID });
 
+                    context.Operation.AddRange(operations);
                     context.SaveChanges();
                     return MessageBoxResult.Yes;
                 case MessageBoxResult.No:
@@ -484,9 +485,8 @@ namespace Metr.Classes
         /// <param name="devices">Скрываемые приборы</param>
         /// <param name="context">Контекст БД</param>
         /// <param name="user">Пользователь, скрывающий приборы</param>
-        public static void deviceHide(List<Device> devices, MetrBaseEntities context, int user)
+        public static void deviceHide(List<Device> devices, MetrBaseEn context, int user)
         {
-            int tempid = 0;
             List<Device> devs = new List<Device>();
             string devstring = "";
             if (devices.Count() != 0)
@@ -509,14 +509,8 @@ namespace Metr.Classes
                             OperationText = "Скрытие прибора " + d.Name + " " + d.FNum, 
                             ComputerName = Environment.MachineName,
                             ID_Type = 9,
-                            ID_Status = 1
-                        });
-                        context.SaveChanges();
-                        tempid = context.Operation.Last().Operation_ID;
-                        context.OperationDevice.Add(new OperationDevice()
-                        {
-                            ID_Device = d.Device_ID,
-                            ID_Operation = tempid
+                            ID_Status = 1,
+                            ID_Device = d.Device_ID
                         });
                         context.SaveChanges();
                     }
@@ -531,9 +525,8 @@ namespace Metr.Classes
         /// <param name="devices">Расскрываемые приборы</param>
         /// <param name="context">Контекст БД</param>
         /// <param name="user">Пользователь, расскрывающий приборы</param>
-        public static void deviceUnHide(List<Device> devices, MetrBaseEntities context, int user)
+        public static void deviceUnHide(List<Device> devices, MetrBaseEn context, int user)
         {
-            int tempid = 0;
             List<Device> devs = new List<Device>();
             string devstring = "";
             if (devices.Count() != 0)
@@ -549,6 +542,7 @@ namespace Metr.Classes
                     {
                         d.Hidden = false;
                         d.NoteText.Replace("'Скрыт'","");
+
                         context.Operation.Add(new Operation()
                         {
                             UserID = user,
@@ -556,15 +550,10 @@ namespace Metr.Classes
                             OperationText = "Расскрытие прибора " + d.Name + " " + d.FNum,
                             ComputerName = Environment.MachineName,
                             ID_Type = 9,
-                            ID_Status = 1
+                            ID_Status = 1,
+                            ID_Device = d.Device_ID
                         });
                         context.SaveChanges();
-                        tempid = context.Operation.Last().Operation_ID;
-                        context.OperationDevice.Add(new OperationDevice()
-                        {
-                            ID_Device = d.Device_ID,
-                            ID_Operation = tempid
-                        });
                     }
                     context.SaveChanges();
                     MessageBox.Show("Приборы расскрыты", "Изменение видимости", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -578,7 +567,7 @@ namespace Metr.Classes
         /// <param name="devices">Удаляемые приборы</param>
         /// <param name="context">Контекст БД</param>
         /// <param name="user">Пользователь, удаляющий приборы</param>
-        public static void deviceDel(List<Device> devices, MetrBaseEntities context, int user)
+        public static void deviceDel(List<Device> devices, MetrBaseEn context, int user)
         {
             List<Device> devs = new List<Device>();
             string devstring = "";
@@ -586,9 +575,7 @@ namespace Metr.Classes
             {
                 foreach (Device d in devices)
                 {
-                    if (!string.IsNullOrEmpty(d.NoteText))
-                    {
-                        if (d.NoteText.Contains("^del^"))
+                        if (d.Removed.Value)
                             MessageBox.Show(d.Name + " " + d.FNum + " уже удалён, для восстановления необходимо перейти во вкладку 'Исключённые'", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                         else
                         {
@@ -596,25 +583,18 @@ namespace Metr.Classes
                             devs.Add(d);
                         }
                     }
-                    else
-                    {
-                        devstring += "\n" + d.Name + " " + d.FNum;
-                        devs.Add(d);
-                    }
                 }
-
+                
                 if (MessageBox.Show("Будут исключены из списка следующие приборы:" + devstring + "\nПрименить?\n Данные приборы можно будет найти и восстановить на вкладке 'Исключённые'.", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     foreach (Device d in devs)
-                    {
-                        d.NoteText = string.IsNullOrEmpty(d.NoteText) ? ":^del^" : d.NoteText.Contains(':') ? d.NoteText + "^del^" : d.NoteText + ":^del^";
-                        d.NoteText = d.NoteText.Insert(d.NoteText.IndexOf(':'), " \n'Исключён " + DateTime.Now.ToShortDateString() + "'");
-                        context.Actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Исключение прибора " + d.Name + " " + d.FNum, ComputerName = Environment.MachineName });
+                    {                        
+                        d.Removed = true;
+                        context.Operation.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Исключение прибора " + d.Name + " " + d.FNum + "\n", ComputerName = Environment.MachineName, ID_Type = 4, ID_Status = 1, ID_Device = d.Device_ID });
                     }
                     context.SaveChanges();
                     MessageBox.Show("Приборы исключены", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-            }
             else
             {
                 MessageBox.Show("Выделите приборы для удаления");
@@ -626,7 +606,7 @@ namespace Metr.Classes
         /// <param name="devices">Восстановляемые приборы</param>
         /// <param name="context">Контекст БД</param>
         /// <param name="user">Пользователь, восстанавляющий приборы</param>
-        public static void deviceRec(List<Device> devices, MetrBaseEntities context, int user)
+        public static void deviceRec(List<Device> devices, MetrBaseEn context, int user)
         {
             List<Device> devs = new List<Device>();
             string devstring = "";
@@ -641,10 +621,8 @@ namespace Metr.Classes
                 {
                     foreach (Device d in devs)
                     {
-                        d.NoteText = d.NoteText
-                            .Remove(d.NoteText.IndexOf("^del^"), 5)
-                            .Remove(d.NoteText.Contains(" \n'Исключён") ? d.NoteText.IndexOf(" \n'Исключён") : 0, d.NoteText.Contains(" \n'Исключён") ? 23 : 0);
-                        context.Actions.Add(new Actions() { UserID = user, ActionDate = DateTime.Now, ActionText = "Восстановление прибора " + d.Name + " " + d.FNum, ComputerName = Environment.MachineName });
+                        d.Removed = false;
+                        context.Operation.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Восстановление прибора " + d.Name + " " + d.FNum, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 5, ID_Device = d.Device_ID });
                     }
                     context.SaveChanges();
                     MessageBox.Show("Приборы восстановлены", "Восстановление", MessageBoxButton.OK, MessageBoxImage.Information);

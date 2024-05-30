@@ -21,12 +21,12 @@ namespace Metr
     public partial class UserManagmentWindow : Window
     {
         public int User { get; set; }
-        MetrBaseEntities context;
+        MetrBaseEn context;
         List<Actions> register = new List<Actions>();
         public UserManagmentWindow()
         {
             InitializeComponent();            
-            context = MetrBaseEntities.GetContext();
+            context = MetrBaseEn.GetContext();
             UpdateTabs();
         }
         void UpdateTabs() 
@@ -202,7 +202,36 @@ namespace Metr
 
         private void uCnlBtn_Click(object sender, RoutedEventArgs e)
         {
+            if (regGrid.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите учётную запись", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            else
+            {
+                User adm = context.User.Where(u => u.User_ID == User).FirstOrDefault();
+                int id = (regGrid.SelectedItem as Actions).UserID;
+                User user = context.User.Where(u => u.User_ID == id).FirstOrDefault();
+                UserActivate userActivate = new UserActivate("Пользователю будет открыт доступ к системе\nГость - только просмотр данных\nПользователь - редактирование журнала\nАдминистратор - редактирование журнала и управление учётными записями");
+                userActivate.ShowDialog();
+                if (userActivate.DialogResult == true)
+                {
 
+                    var a = UControl.activateEmp(id, User, userActivate.selectedRole);
+                    user = a.User;
+                    string roletxt = context.Role.Where(r => r.Role_ID == userActivate.selectedRole).FirstOrDefault().Title;
+                    context.Actions.Add(new Actions()
+                    {
+                        ActionDate = DateTime.Now,
+                        ActionText = adm.FullName + " открыл доступ с уровнем \"" + roletxt + "\" " + user.FullName,
+                        UserID = User,
+                        ComputerName = Environment.MachineName
+                    });
+                    context.SaveChanges();
+                    MessageBox.Show("Активация учётной записи произведена", "Активация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    UpdateTabs();
+                }
+            }
         }
     }
 }

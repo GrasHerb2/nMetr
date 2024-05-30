@@ -24,7 +24,7 @@
             Список пользователей запрашивающих доступ к системе
             </summary>
         </member>
-        <member name="M:Metr.Classes.UControl.UpdateUsers(Metr.MetrBaseEntities)">
+        <member name="M:Metr.Classes.UControl.UpdateUsers(Metr.MetrBaseEn)">
             <summary>
             Метод обновления списков пользователей
             </summary>
@@ -132,7 +132,7 @@
             Строка результата таблицы исключённых приборов
             </summary>
         </member>
-        <member name="F:Metr.Classes.DeviceData.actions">
+        <member name="F:Metr.Classes.DeviceData.operations">
             <summary>
             Список действий для записи в БД последнего использовавшегося метода
             </summary>
@@ -163,7 +163,7 @@
             <param name="Exp">(Для Основного) Выделение даты просроченых приборов</param>
             <returns>Возвращает deviceList</returns>
         </member>
-        <member name="M:Metr.Classes.DeviceData.NewDevice(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.Boolean,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.NewDevice(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Int32,System.String,System.Boolean,System.Int32)">
             <summary>
             Метод добавления нового прибора
             </summary>
@@ -196,7 +196,7 @@
             <param name="PPR">Прохождение ППР</param>
             <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
         </member>
-        <member name="M:Metr.Classes.DeviceData.deviceHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.deviceHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEn,System.Int32)">
             <summary>
             Метод скрытия прибора
             </summary>
@@ -204,7 +204,7 @@
             <param name="context">Контекст БД</param>
             <param name="user">Пользователь, скрывающий приборы</param>
         </member>
-        <member name="M:Metr.Classes.DeviceData.deviceUnHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.deviceUnHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEn,System.Int32)">
             <summary>
             Метод расскрытия прибора
             </summary>
@@ -212,7 +212,7 @@
             <param name="context">Контекст БД</param>
             <param name="user">Пользователь, расскрывающий приборы</param>
         </member>
-        <member name="M:Metr.Classes.DeviceData.deviceDel(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.deviceDel(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEn,System.Int32)">
             <summary>
             Метод удаления прибора
             </summary>
@@ -220,7 +220,7 @@
             <param name="context">Контекст БД</param>
             <param name="user">Пользователь, удаляющий приборы</param>
         </member>
-        <member name="M:Metr.Classes.DeviceData.deviceRec(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEntities,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.deviceRec(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEn,System.Int32)">
             <summary>
             Метод восстановления прибора
             </summary>
@@ -263,6 +263,20 @@
             </summary>
         </member>
         <member name="M:Metr._Windows.ExportWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Metr._Windows.HistWindow">
+            <summary>
+            Логика взаимодействия для HistWindow.xaml
+            </summary>
+            
+            <summary>
+            HistWindow
+            </summary>
+        </member>
+        <member name="M:Metr._Windows.HistWindow.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>
@@ -390,36 +404,6 @@
             <summary>
               Переопределяет свойство CurrentUICulture текущего потока для всех
               подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>

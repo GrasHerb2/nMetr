@@ -20,17 +20,24 @@ namespace Metr._Windows
     public partial class TextWin : Window
     {
         public string textOut { get; set; }
-        public TextWin(string Message, string Header)
+        int type = 0;
+        public TextWin(string Message, string Header, int type = 0)
         {
             InitializeComponent();
+
             this.mainLbl.Content = Message;
             this.Title = Header;
+            this.type = type;
         }
 
         private void acceptBtn_Click(object sender, RoutedEventArgs e)
         {
-            textOut = inputTxt.Text;
-            DialogResult = true;
+            if (!string.IsNullOrEmpty(inputTxt.Text)||type == 1)
+            {
+                textOut = inputTxt.Text;
+                DialogResult = true;
+            }
+            else MessageBox.Show("Введите название объекта", Title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
