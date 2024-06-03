@@ -62,7 +62,7 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Width="1.5*" Header="Запрос" Binding="{Binding ActionText}">
+                            <DataGridTextColumn Width="1.5*" Header="Запрос" Binding="{Binding OperationText}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

@@ -141,26 +141,28 @@ namespace Metr.Classes
         /// 0=Операця успешна
         /// -1=Ошибка доступа к БД или иное
         /// </returns>
-        public static int newEmployee(string newLogin, string newPass, string newFullName, string newMail, bool instant = false, int role = 1)
+        public static tResult newEmployee(string newLogin, string newPass, string newFullName, string newMail, bool instant = false, int role = 1)
         {
-            int result = 0;
+            tResult result = new tResult();
             try
             {
                 var a = Sha256Coding(newLogin);
                 if (context.User.Where(p => p.ULogin == a).Count() > 0)
                 {
-                    result = 1;
+                    result.resultid = 1;
+                    result.errorText = "Логин занят, необходимо использовать иной";
                     return result;
                 }//в системе не может быть двух однинаковых логинов
 
-                context.Operation.Add (new Operation()
+                if (!instant)
+                result.Operation = new Operation()
                 {
                     OperationDate = DateTime.Now,
                     UserID = 0,
                     OperationText = "Регистрация\nКомпьютер:" + Environment.MachineName.ToString() + "\nФИО:" + newFullName + "\n" + DateTime.Now.ToShortDateString(),
                     ComputerName = Environment.MachineName.ToString(),
                     ID_Status = 2,
-                    ID_Type = 1
+                    ID_Type = 1                    
                 };
                 newLogin = Sha256Coding(newLogin);
                 newPass = Sha256Coding(newPass);
@@ -172,7 +174,6 @@ namespace Metr.Classes
                     Email = newMail,
                     UPass = (instant ? "" : "___" )+ newPass//instant - мгновенное создание записи администратором
                 };
-
                 result.resultid = 0;
 
                 return result;
@@ -181,16 +182,76 @@ namespace Metr.Classes
             catch (System.Exception ex)
             {
                 result.resultid = -1;
-                result.Operation = new Operation() { OperationText = ex.Message.ToString() };
+                result.errorText = ex.InnerException.Message.ToString();
                 return result;
             }
         }
+
+
+        /// <summary>
+        /// Изменение пользователя
+        /// </summary>
+        /// <param name="chgLogin">Изменённый логин пользователя</param>
+        /// <param name="chgPass">Изменённый пароль пользователя</param>
+        /// <param name="chgFullName">Изменённое ФИО пользователя</param>
+        /// <param name="chgMail">Изменённая электронная почта</param>
+        /// <returns>
+        /// Коды результатов:
+        /// 1=Пользователь с таким логином уже записан в БД;
+        /// 0=Операця успешна
+        /// -1=Ошибка доступа к БД или иное
+        /// </returns>
+        public static tResult redactEmployee(string chgLogin, string chgPass, string chgFullName, string chgMail)
+        {
+            tResult result = new tResult();
+            try
+            {
+                var a = Sha256Coding(chgLogin);
+                if (context.User.Where(p => p.ULogin == a).Count() > 0)
+                {
+                    result.resultid = 1;
+                    result.errorText = "Логин занят, необходимо использовать иной";
+                    return result;
+                }//в системе не может быть двух однинаковых логинов
+                chgLogin = Sha256Coding(chgLogin);
+                chgPass = Sha256Coding(chgPass);
+                result.User = new User()
+                {
+                    FullName = chgFullName,
+                    ULogin = chgLogin,
+                    Email = chgMail,
+                    UPass = chgPass
+                };
+                result.resultid = 0;
+
+                result.Operation = new Operation()
+                {
+                    UserID = CurrentUser.user.User_ID,
+                    OperationDate = DateTime.Now,
+                    ComputerName = Environment.MachineName.ToString(),
+                    OperationText = CurrentUser.user.FullName + " изменил учётную запись",
+                    ID_Status = 1,
+                    ID_Type = 2
+                };
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                result.resultid = -1;
+                result.errorText = ex.InnerException.Message.ToString();
+                return result;
+            }
+        }
+
+
         /// <summary>
         /// Деактивация учётной записи пользователя
         /// </summary>
-        /// <param name="delIndex">Логин отключаемой учётной записи</param>
-        /// <param name="admIndex">Логин учётной записи диактивирующего</param>
-        /// <returns>Возвращает объект класса tResult хранящий объект отключенной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка отключения</returns>
+        /// <param name="delIndex">ID диактивируемой учётной записи</param>
+        /// <param name="admIndex">ID учётной записи диактивирующего</param>
+        /// <returns>Возвращает объект класса tResult хранящий объект отключенной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка деактивации</returns>
         public static tResult deactiveEmp(int delIndex, int admIndex)
         {
             tResult result = new tResult();
@@ -198,12 +259,14 @@ namespace Metr.Classes
             {
                 User deluser = context.User.Where(p => p.User_ID == delIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
-                result.Operation = new Actions()
+                result.Operation = new Operation()
                 {
                     UserID = admuser.User_ID,
-                    ActionDate = DateTime.Now,
+                    OperationDate = DateTime.Now,
                     ComputerName = Environment.MachineName.ToString(),
-                    ActionText = admuser.FullName + " отключил учётную запись " + deluser.FullName
+                    OperationText = admuser.FullName + " отключил учётную запись " + deluser.FullName,
+                    ID_Status = 1,
+                    ID_Type = 2
                 };
 
                 deluser.ULogin = "___" + deluser.ULogin;
@@ -214,28 +277,32 @@ namespace Metr.Classes
                 
                 return result;
             }
-            catch {
+            catch (Exception ex){
+                result.errorText = "Ошибка деактивации, подробнее:\n" + ex.InnerException.Message.ToString();
                 result.resultid = -1;
                 return result; }
         }
         /// <summary>
         /// Восстановление учётной записи пользователя
         /// </summary>
-        /// <param name="delLogin">Логин восстанавливаемой учётной записи</param>
-        /// <param name="admLogin">Логин учётной записи восстанавливающего</param>
-        /// <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
-        public static string recoverEmp(int recIndex, int admIndex)
+        /// <param name="recIndex">ID восстанавливаемой учётной записи</param>
+        /// <param name="admIndex">ID учётной записи восстанавливающего</param>
+        /// <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
+        public static tResult recoverEmp(int recIndex, int admIndex)
         {
+            tResult result = new tResult();
             try
             {
                 User recuser = context.User.Where(p => p.User_ID == recIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
-                result.Action = new Actions()
+                result.Operation = new Operation()
                 {
                     UserID = admuser.User_ID,
-                    ActionDate = DateTime.Now,
+                    OperationDate = DateTime.Now,
                     ComputerName = Environment.MachineName.ToString(),
-                    ActionText = admuser.FullName + " восстановил учётную запись " + recuser.FullName
+                    OperationText = admuser.FullName + " восстановил учётную запись " + recuser.FullName,
+                    ID_Status = 1,
+                    ID_Type = 2
                 };
 
                 recuser.ULogin = recuser.ULogin.Remove(0,3);
@@ -246,8 +313,9 @@ namespace Metr.Classes
 
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                result.errorText = "Ошибка восстановления, подробнее:\n" + ex.InnerException.Message.ToString();
                 result.resultid = -1;
                 return result;
             }
@@ -255,12 +323,15 @@ namespace Metr.Classes
         /// <summary>
         /// Активация учётной записи пользователя
         /// </summary>
-        /// <param name="delLogin">Логин активируемой учётной записи</param>
-        /// <param name="admLogin">Логин учётной записи активирующего</param>
-        /// <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
+        /// <param name="actIndex">ID активируемой учётной записи</param>
+        /// <param name="admIndex">ID учётной записи активирующего</param>
+        /// <param name="role">Роль, с которой будет активирован пользователь (1 Гость, 2 Пользователь, 3 Администратор)</param>
+        /// <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
         public static tResult activateEmp(int actIndex, int admIndex, int role)
         {
             tResult result = new tResult();
+            try
+            {
                 User actuser = context.User.Where(p => p.User_ID == actIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
 
@@ -272,6 +343,23 @@ namespace Metr.Classes
                 result.resultid = 0;
 
                 return result;
+            }
+            catch (Exception ex)
+            {
+                result.errorText = "Ошибка активации, подробнее:\n" + ex.InnerException.Message.ToString();
+                result.resultid = -1;
+                return result;
+            }
+        }
+        /// <summary>
+        /// Класс результата операции работы с учётными записями.
+        /// </summary>
+        public class tResult
+        {
+            public int resultid { get; set; }
+            public User User { get; set; }
+            public Operation Operation { get; set; }
+            public string errorText {  get; set; }
         }
     }
 }

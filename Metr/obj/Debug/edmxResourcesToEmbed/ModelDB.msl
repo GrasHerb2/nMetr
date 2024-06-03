@@ -1,17 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="Хранилище MetrBaseModelContainer" CdmEntityContainer="MetrBaseEn">
-    <EntitySetMapping Name="Actions">
-      <EntityTypeMapping TypeName="MetrBaseModel.Actions">
-        <MappingFragment StoreEntitySet="Actions">
-          <ScalarProperty Name="Action_ID" ColumnName="Action_ID" />
-          <ScalarProperty Name="ActionDate" ColumnName="ActionDate" />
-          <ScalarProperty Name="ActionText" ColumnName="ActionText" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
-          <ScalarProperty Name="ComputerName" ColumnName="ComputerName" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Device">
       <EntityTypeMapping TypeName="MetrBaseModel.Device">
         <MappingFragment StoreEntitySet="Device">

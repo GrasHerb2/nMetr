@@ -33,7 +33,6 @@ namespace Metr
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Actions> Actions { get; set; }
         public virtual DbSet<Device> Device { get; set; }
         public virtual DbSet<Object> Object { get; set; }
         public virtual DbSet<Operation> Operation { get; set; }

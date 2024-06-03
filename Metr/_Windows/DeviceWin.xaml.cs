@@ -12,9 +12,6 @@ namespace Metr
     {
         
         public bool add = true;
-
-        public List<Actions> actions { get; set; }
-        public CurrentUser User { get; set; }
         MetrBaseEn context = MetrBaseEn.GetContext();
         public Device dev;
         public DeviceWin(bool adding = true, int i = 0)
@@ -23,7 +20,6 @@ namespace Metr
             objectCB.ItemsSource = context.Object.ToList();
             add = adding;
             dev = context.Device.Where(d=>d.Device_ID == i).FirstOrDefault();
-            actions = new List<Actions>();
             bool noppr = false;
             
 
@@ -55,7 +51,7 @@ namespace Metr
 
             if (add)
             {
-                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, chbPPR.IsChecked.Value, User.Id))
+                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, chbPPR.IsChecked.Value, CurrentUser.user.User_ID))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;
@@ -64,12 +60,11 @@ namespace Metr
                         DialogResult = false;
                         return;
                     default: break;
-                }
-                    
+                }                    
             }
             else 
             {
-                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, User.Id,chbPPR.IsChecked.Value))
+                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, CurrentUser.user.User_ID, chbPPR.IsChecked.Value))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;

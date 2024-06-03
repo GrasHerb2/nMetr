@@ -5,7 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="cb337533353f484b8958cc610e4ed0ff" Name="Diagram1">
-        <EntityTypeShape EntityType="MetrBaseModel.Actions" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
         <EntityTypeShape EntityType="MetrBaseModel.Device" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="MetrBaseModel.Object" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MetrBaseModel.Operation" Width="1.5" PointX="5.25" PointY="1.25" IsExpanded="true" />
@@ -14,7 +13,6 @@
         <EntityTypeShape EntityType="MetrBaseModel.Role" Width="1.5" PointX="0.75" PointY="11.5" IsExpanded="true" />
         <EntityTypeShape EntityType="MetrBaseModel.sysdiagrams" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MetrBaseModel.User" Width="1.5" PointX="3" PointY="10.875" IsExpanded="true" />
-        <AssociationConnector Association="MetrBaseModel.FK_Actions_User" ManuallyRouted="false" />
         <AssociationConnector Association="MetrBaseModel.FK_Device_Object" ManuallyRouted="false" />
         <AssociationConnector Association="MetrBaseModel.FK_Operation_Device" ManuallyRouted="false" />
         <AssociationConnector Association="MetrBaseModel.FK_Operation_OperationStatus" ManuallyRouted="false" />

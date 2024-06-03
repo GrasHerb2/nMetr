@@ -20,7 +20,7 @@ namespace Metr
     /// </summary>
     public partial class ActionsWindow : Window
     {
-        List<Actions> actionsList;
+        List<Operation> operationList;
         MetrBaseEn context = MetrBaseEn.GetContext();
         public int userID { get; set; }
 
@@ -28,7 +28,7 @@ namespace Metr
         public ActionsWindow(int uID = 0)
         {
             InitializeComponent();
-            searchTBFN.ItemsSource = context.User.Where(a=>a.Actions.Count!=0).Select(a=>a.FullName).ToList();
+            searchTBFN.ItemsSource = context.User.Where(a=>a.Operation.Count!=0).Select(a=>a.FullName).ToList();
             userID = uID;
             try
             {
@@ -40,22 +40,22 @@ namespace Metr
 
         void Update()
         {
-            actionsList = context.Actions.ToList();
-            preCount = actionsList.Count();
+            operationList = context.Operation.ToList();
+            preCount = operationList.Count();
             if (searchTBFN.Text != "")
-                actionsList = actionsList.Where(a => a.User.FullName == searchTBFN.Text).ToList();
+                operationList = operationList.Where(a => a.User.FullName == searchTBFN.Text).ToList();
 
             if (DateStart.SelectedDate != null)
-                actionsList = actionsList.Where(a => DateTime.Compare(DateStart.SelectedDate.Value, a.ActionDate) <= 0).ToList();
+                operationList = operationList.Where(a => DateTime.Compare(DateStart.SelectedDate.Value, a.OperationDate) <= 0).ToList();
             if (DateEnd.SelectedDate != null)
-                actionsList = actionsList.Where(a => DateTime.Compare(DateEnd.SelectedDate.Value, a.ActionDate) >= 0).ToList();
+                operationList = operationList.Where(a => DateTime.Compare(DateEnd.SelectedDate.Value, a.OperationDate) >= 0).ToList();
 
-            actionsList = actionsList.OrderByDescending(a=>a.ActionDate).ToList();
+            operationList = operationList.OrderByDescending(a=>a.OperationDate).ToList();
 
-            CountLbl.Content = "Записи:"+actionsList.Count+" из "+context.Actions.Count();
+            CountLbl.Content = "Записи:"+operationList.Count+" из "+context.Operation.Count();
 
             mainGrid.ItemsSource = null;
-            mainGrid.ItemsSource = actionsList;
+            mainGrid.ItemsSource = operationList;
         }
 
         private void mainGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)

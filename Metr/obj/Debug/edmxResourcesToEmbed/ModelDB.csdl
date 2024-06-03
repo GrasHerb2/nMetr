@@ -1,16 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="MetrBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-  <EntityType Name="Actions">
-    <Key>
-      <PropertyRef Name="Action_ID" />
-    </Key>
-    <Property Name="Action_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="ActionDate" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="ActionText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="UserID" Type="Int32" Nullable="false" />
-    <Property Name="ComputerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-    <NavigationProperty Name="User" Relationship="Self.FK_Actions_User" FromRole="Actions" ToRole="User" />
-  </EntityType>
   <EntityType Name="Device">
     <Key>
       <PropertyRef Name="Device_ID" />
@@ -99,22 +88,9 @@
     <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="ULogin" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="UPass" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-    <NavigationProperty Name="Actions" Relationship="Self.FK_Actions_User" FromRole="User" ToRole="Actions" />
     <NavigationProperty Name="Operation" Relationship="Self.FK_Operation_User" FromRole="User" ToRole="Operation" />
     <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
   </EntityType>
-  <Association Name="FK_Actions_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
-    <End Role="Actions" Type="Self.Actions" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="User_ID" />
-      </Principal>
-      <Dependent Role="Actions">
-        <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Device_Object">
     <End Role="Object" Type="Self.Object" Multiplicity="1" />
     <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -188,7 +164,6 @@
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="MetrBaseEn" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="Actions" EntityType="Self.Actions" />
     <EntitySet Name="Device" EntityType="Self.Device" />
     <EntitySet Name="Object" EntityType="Self.Object" />
     <EntitySet Name="Operation" EntityType="Self.Operation" />
@@ -197,10 +172,6 @@
     <EntitySet Name="Role" EntityType="Self.Role" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
     <EntitySet Name="User" EntityType="Self.User" />
-    <AssociationSet Name="FK_Actions_User" Association="Self.FK_Actions_User">
-      <End Role="User" EntitySet="User" />
-      <End Role="Actions" EntitySet="Actions" />
-    </AssociationSet>
     <AssociationSet Name="FK_Device_Object" Association="Self.FK_Device_Object">
       <End Role="Object" EntitySet="Object" />
       <End Role="Device" EntitySet="Device" />

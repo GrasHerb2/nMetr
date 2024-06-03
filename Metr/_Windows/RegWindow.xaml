@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Metr"
         mc:Ignorable="d"
-        Title="Запрос на добавление учётной записи" Width="340" ResizeMode="NoResize" Height="400">
+        Title="" Width="340" ResizeMode="NoResize" Height="400" Closing="Window_Closing">
     <Viewbox>
     <StackPanel Width="340">
         <Label Margin="5" Content="ФИО"/>

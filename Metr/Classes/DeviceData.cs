@@ -317,7 +317,7 @@ namespace Metr.Classes
         /// <param name="ExpDate">Срок годности </param>
         /// <param name="Period">Период прохождения ППР </param>
         /// <param name="NoteText">Примечания </param>
-        /// <param name="PPR">Отслеживание ППР </param>
+        /// <param name="noPPR">Отслеживание ППР </param>
         /// <param name="user">Пользоваетль добавляющий прибор</param>
         /// <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
         public static MessageBoxResult NewDevice(string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, bool noPPR, int user)
@@ -394,11 +394,13 @@ namespace Metr.Classes
         /// <param name="Period">Период прохождения ППР в месяцах</param>
         /// <param name="NoteText">Примечание</param>
         /// <param name="user">Пользователь, производящий изменение</param>
-        /// <param name="PPR">Прохождение ППР</param>
+        /// <param name="noPPR">Прохождение ППР</param>
         /// <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
-        public static MessageBoxResult DeviceEdit(Device dev, string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, int user, bool? PPR = null)
+        public static MessageBoxResult DeviceEdit(Device dev, string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, int user, bool? noPPR = null)
         {
             MetrBaseEn context = MetrBaseEn.GetContext();
+            
+            operations.Clear();
 
             dev.NoteText = !string.IsNullOrEmpty(dev.NoteText) ? dev.NoteText : "";
 
@@ -420,8 +422,8 @@ namespace Metr.Classes
                     return MessageBoxResult.Cancel;
             
             log += dev.PPR_Period.Value == Period ? "" : dev.PPR_Period + "->" + Period + "\n";
-            if (PPR!=null)
-            log += dev.PPR_Removed.Value && PPR.Value ? "\n>ППР: Включён\n" : !dev.PPR_Removed.Value && !PPR.Value ? "\nППР: Исключён\n" : "";       
+            if (noPPR != null)
+            log += dev.PPR_Removed.Value && !noPPR.Value ? "\n>ППР: Включён\n" : !dev.PPR_Removed.Value && noPPR.Value ? "\nППР: Исключён\n" : "";       
 
             if (FNum + "" == "") FNum = "Н/Д";
 
@@ -464,7 +466,7 @@ namespace Metr.Classes
                     dev.PPR_Period = Period;
 
                     context.SaveChanges();
-
+                    dev = context.Device.Where(d => d.Device_ID == dev.Device_ID).Single();
                     operations.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Изменение прибора " + dev.Name + "\n" + log, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 8, ID_Device = dev.Device_ID });
 
                     context.Operation.AddRange(operations);

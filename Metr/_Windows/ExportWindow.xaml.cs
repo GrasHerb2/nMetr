@@ -85,7 +85,7 @@ namespace Metr._Windows
             if (!textWin.DialogResult.Value)
             {
                 MessageBox.Show("Сохранение отменено", "Экспорт", MessageBoxButton.OK, MessageBoxImage.Information);
-                e.Handled = true;
+                return;
             }
             localSettings.Name = textWin.textOut;
             localSettings.CHeader = Columns.Select(p => p.Header).ToList();

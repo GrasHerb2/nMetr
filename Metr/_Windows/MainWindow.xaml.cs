@@ -16,16 +16,16 @@ namespace Metr
     public partial class MainWindow : Window
     {
         MetrBaseEn context = MetrBaseEn.GetContext();
-        
+
         List<string> objNames = new List<string>();
         List<string> dSearch = new List<string>();
         List<string> objects = new List<string>();
 
 
         ExportWindow exWin;
-        ActionsWindow actionsWindow;
+        HistWindow histWindow;
         UserManagmentWindow umw;
-        
+
         DateTime? searchStart = null;
         DateTime? searchEnd = null;
         string tempText;
@@ -36,15 +36,13 @@ namespace Metr
 
 
         string objTemp = "";
-
-        public CurrentUser User { get; set; }
         public MainWindow()
         {
             InitializeComponent();
 
             this.WindowState = WindowState.Maximized;
 
-            
+
             try
             {
                 SettingsClass.LoadSettings();
@@ -68,14 +66,12 @@ namespace Metr
             switch (authWin.DialogResult)
             {
                 case true:
-                    if (authWin.authUser.Id != 1)
+                    if (CurrentUser.user.User_ID != 1)
                     {
-                        User = new CurrentUser() { Id = authWin.authUser.Id, FullName = authWin.authUser.FullName, RoleID = authWin.authUser.RoleID };
-                        MessageBox.Show("Вы вошли как " + User.FullName + "\nДобро пожаловать!", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("Вы вошли как " + CurrentUser.user.FullName + "\nДобро пожаловать!", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
-                        User = new CurrentUser() { Id = 1, FullName = "Гость", RoleID = 1 };
                         MessageBox.Show("В режиме просмотра вам не доступны действия связанные с редактированием", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     break;
@@ -110,7 +106,7 @@ namespace Metr
                     pprGrid.ItemsSource = DeviceData.deviceListPPR;
 
                     excGrid.ItemsSource = null;
-                    excGrid.ItemsSource = DeviceData.deviceListExc;                    
+                    excGrid.ItemsSource = DeviceData.deviceListExc;
 
                     pBar.Visibility = Visibility.Collapsed;
                     searchTBObj.ItemsSource = (context.Object.OrderBy(d => d.Name).Select(d => d.Name).ToList());
@@ -182,7 +178,7 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     List<Device> devicesHide = new List<Device>();
                     List<Device> devicesUnHide = new List<Device>();
@@ -193,8 +189,8 @@ namespace Metr
                         else
                             devicesHide.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
                     }
-                    if (devicesHide.Count() > 0) DeviceData.deviceHide(devicesHide, context, User.Id);
-                    if (devicesUnHide.Count() > 0) DeviceData.deviceUnHide(devicesUnHide, context, User.Id);
+                    if (devicesHide.Count() > 0) DeviceData.deviceHide(devicesHide, context, CurrentUser.user.User_ID);
+                    if (devicesUnHide.Count() > 0) DeviceData.deviceUnHide(devicesUnHide, context, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для изменения видимости необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -210,7 +206,7 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     List<Device> devicesDel = new List<Device>();
                     List<Device> devicesRec = new List<Device>();
@@ -221,8 +217,8 @@ namespace Metr
                         else
                             devicesRec.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
                     }
-                    if (devicesDel.Count() > 0) DeviceData.deviceDel(devicesDel, context, User.Id);
-                    if (devicesRec.Count() > 0) DeviceData.deviceRec(devicesRec, context, User.Id);
+                    if (devicesDel.Count() > 0) DeviceData.deviceDel(devicesDel, context, CurrentUser.user.User_ID);
+                    if (devicesRec.Count() > 0) DeviceData.deviceRec(devicesRec, context, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для удаления необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -237,9 +233,9 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
-                    DeviceWin newDevice = new DeviceWin(true) { User = this.User };
+                    DeviceWin newDevice = new DeviceWin(true);
                     newDevice.ShowDialog();
                     switch (newDevice.DialogResult)
                     {
@@ -291,10 +287,10 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     int index = ((DeviceData)deviceGrid.SelectedItems[0]).ID;
-                    DeviceWin newDevice = new DeviceWin(false, index) { User = this.User };
+                    DeviceWin newDevice = new DeviceWin(false, index);
                     newDevice.ShowDialog();
                     switch (newDevice.DialogResult)
                     {
@@ -330,11 +326,11 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, User.Id);
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -399,10 +395,9 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID == 3)
+                if (CurrentUser.user.RoleID == 3)
                 {
                     umw = new UserManagmentWindow();
-                    umw.User = User.Id;
                     umw.ShowDialog();
                 }
                 else MessageBox.Show("Для данной функции необходимо иметь доступ 'Администратор'");
@@ -414,8 +409,8 @@ namespace Metr
         }
         private void journalBtn_Click(object sender, RoutedEventArgs e)
         {
-            actionsWindow = new ActionsWindow();
-            actionsWindow.Show();
+            histWindow = new HistWindow();
+            histWindow.ShowDialog();
         }
 
         private void infoBtn_Click(object sender, RoutedEventArgs e)
@@ -432,14 +427,14 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     List<Device> devices = new List<Device>();
                     foreach (DeviceData d in excGrid.SelectedItems)
                     {
                         devices.Add(context.Device.Where(dev => dev.Device_ID == d.ID).FirstOrDefault());
                     }
-                    DeviceData.deviceRec(devices, context, User.Id);
+                    DeviceData.deviceRec(devices, context, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для восстановления необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -454,11 +449,11 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, User.Id);
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -474,11 +469,11 @@ namespace Metr
         {
             try
             {
-                if (User.RoleID >= 2)
+                if (CurrentUser.user.RoleID >= 2)
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, User.Id); 
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -502,13 +497,17 @@ namespace Metr
 
         private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            objects.RemoveAt(ObjListView.SelectedIndex);
+            try
+            {
+                objects.RemoveAt(ObjListView.SelectedIndex);
 
-            ObjListView.ItemsSource = null;
-            ObjListView.ItemsSource = objects;
+                ObjListView.ItemsSource = null;
+                ObjListView.ItemsSource = objects;
+            }
+            catch { }
         }
 
-        
+
         private void searchTBObjItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             objectsUpdate((sender as TextBlock).Text);
@@ -536,7 +535,7 @@ namespace Metr
             }
         }
 
-        
+
         private void expBtn_Click(object sender, RoutedEventArgs e)
         {
             exWin = new ExportWindow();
@@ -586,8 +585,14 @@ namespace Metr
 
         private void cHist_Click(object sender, RoutedEventArgs e)
         {
-            HistWindow histWindow = new HistWindow((deviceGrid.SelectedItems.Count>0? deviceGrid.SelectedItems[0] as DeviceData: excGrid.SelectedItems[0] as DeviceData).ID);
+            HistWindow histWindow = new HistWindow((deviceGrid.SelectedItems.Count > 0 ? deviceGrid.SelectedItems[0] as DeviceData : excGrid.SelectedItems[0] as DeviceData).ID);
             histWindow.Show();
+        }
+
+        private void chUserBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RegWindow regWindow = new RegWindow(3);
+            regWindow.ShowDialog();
         }
     }
 }

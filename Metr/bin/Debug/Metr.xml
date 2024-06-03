@@ -53,7 +53,7 @@
             -3  Невозможность получения данных из базы;
             </returns>
         </member>
-        <member name="M:Metr.Classes.UControl.newEmployee(System.String,System.String,System.String,System.String,System.Boolean)">
+        <member name="M:Metr.Classes.UControl.newEmployee(System.String,System.String,System.String,System.String,System.Boolean,System.Int32)">
             <summary>
             Создание нового пользователя
             </summary>
@@ -61,31 +61,54 @@
             <param name="newPass">Пароль нового пользователя</param>
             <param name="newFullName">ФИО нового пользователя</param>
             <param name="newMail">Электронная почта нового пользователя (опционально)</param>
-            <returns>Возвращает класс tResult который содержит объект нового пользователя, запись в журнал аудита и код операции:   1=Пользователь с таким логином уже записан в БД;    0=Операця успешна   -1=Ошибка доступа к БД или иное</returns>
+            <param name="instant">Создание записи без подтверждения администратором</param>
+            <param name="role">ID создаваемой записи, по стандарту "Гость"</param>
+            <returns>
+            Коды результатов:
+            1=Пользователь с таким логином уже записан в БД;
+            0=Операця успешна
+            -1=Ошибка доступа к БД или иное
+            </returns>
+        </member>
+        <member name="M:Metr.Classes.UControl.redactEmployee(System.String,System.String,System.String,System.String)">
+            <summary>
+            Изменение пользователя
+            </summary>
+            <param name="chgLogin">Изменённый логин пользователя</param>
+            <param name="chgPass">Изменённый пароль пользователя</param>
+            <param name="chgFullName">Изменённое ФИО пользователя</param>
+            <param name="chgMail">Изменённая электронная почта</param>
+            <returns>
+            Коды результатов:
+            1=Пользователь с таким логином уже записан в БД;
+            0=Операця успешна
+            -1=Ошибка доступа к БД или иное
+            </returns>
         </member>
         <member name="M:Metr.Classes.UControl.deactiveEmp(System.Int32,System.Int32)">
             <summary>
             Деактивация учётной записи пользователя
             </summary>
-            <param name="delIndex">Логин отключаемой учётной записи</param>
-            <param name="admIndex">Логин учётной записи диактивирующего</param>
-            <returns>Возвращает объект класса tResult хранящий объект отключенной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка отключения</returns>
+            <param name="delIndex">ID диактивируемой учётной записи</param>
+            <param name="admIndex">ID учётной записи диактивирующего</param>
+            <returns>Возвращает объект класса tResult хранящий объект отключенной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка деактивации</returns>
         </member>
         <member name="M:Metr.Classes.UControl.recoverEmp(System.Int32,System.Int32)">
             <summary>
             Восстановление учётной записи пользователя
             </summary>
-            <param name="delLogin">Логин восстанавливаемой учётной записи</param>
-            <param name="admLogin">Логин учётной записи восстанавливающего</param>
-            <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
+            <param name="recIndex">ID восстанавливаемой учётной записи</param>
+            <param name="admIndex">ID учётной записи восстанавливающего</param>
+            <returns>Возвращает объект класса tResult хранящий объект восстановленной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка восстановления</returns>
         </member>
         <member name="M:Metr.Classes.UControl.activateEmp(System.Int32,System.Int32,System.Int32)">
             <summary>
             Активация учётной записи пользователя
             </summary>
-            <param name="delLogin">Логин активируемой учётной записи</param>
-            <param name="admLogin">Логин учётной записи активирующего</param>
-            <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись  журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
+            <param name="actIndex">ID активируемой учётной записи</param>
+            <param name="admIndex">ID учётной записи активирующего</param>
+            <param name="role">Роль, с которой будет активирован пользователь (1 Гость, 2 Пользователь, 3 Администратор)</param>
+            <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
         </member>
         <member name="T:Metr.Classes.UControl.tResult">
             <summary>
@@ -175,7 +198,7 @@
             <param name="ExpDate">Срок годности </param>
             <param name="Period">Период прохождения ППР </param>
             <param name="NoteText">Примечания </param>
-            <param name="PPR">Отслеживание ППР </param>
+            <param name="noPPR">Отслеживание ППР </param>
             <param name="user">Пользоваетль добавляющий прибор</param>
             <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
         </member>
@@ -193,7 +216,7 @@
             <param name="Period">Период прохождения ППР в месяцах</param>
             <param name="NoteText">Примечание</param>
             <param name="user">Пользователь, производящий изменение</param>
-            <param name="PPR">Прохождение ППР</param>
+            <param name="noPPR">Прохождение ППР</param>
             <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
         </member>
         <member name="M:Metr.Classes.DeviceData.deviceHide(System.Collections.Generic.List{Metr.Device},Metr.MetrBaseEn,System.Int32)">
@@ -404,6 +427,36 @@
             <summary>
               Переопределяет свойство CurrentUICulture текущего потока для всех
               подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
             </summary>
         </member>
     </members>

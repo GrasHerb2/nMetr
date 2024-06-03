@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static Metr.Classes.UControl;
 
 namespace Metr
 {
@@ -20,9 +21,8 @@ namespace Metr
     /// </summary>
     public partial class UserManagmentWindow : Window
     {
-        public int User { get; set; }
         MetrBaseEn context;
-        List<Actions> register = new List<Actions>();
+        List<Operation> register = new List<Operation>();
         public UserManagmentWindow()
         {
             InitializeComponent();            
@@ -37,9 +37,10 @@ namespace Metr
 
             foreach (UControl u in UControl.UserDataRegister)
             {
-                register.Add(context.Actions.Where(a => a.UserID == u.userID).First());
+                register.Add(context.Operation.Where(a => a.UserID == u.userID && a.ID_Type == 1 && a.ID_Status==2).First());
             }
 
+            mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = UControl.UserData;
             regGrid.ItemsSource = null;
             regGrid.ItemsSource = register;
@@ -83,25 +84,27 @@ namespace Metr
 
             UControl c = mainGrid.SelectedItem as UControl;
 
-            if (c.userID == User || (c.roleID == 3 && UControl.UserData.Where(u=>u.roleID==3).Count() == 1))
+            if (c.userID == CurrentUser.user.User_ID || (c.roleID == 3 && UControl.UserData.Where(u=>u.roleID==3).Count() == 1))
             {
                 MessageBox.Show("Невозможно деактивировать запись на которой вы в данный момент работаете!","Предупреждение",MessageBoxButton.OK,MessageBoxImage.Warning);
                 return;
             }
             if (MessageBox.Show("Вы уверены, что хотите деактивировать учётную запись\n"+c.fullName+"?","Деактивация",MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                UControl.tResult result = UControl.deactiveEmp(c.userID, User);
+                var result = UControl.deactiveEmp(c.userID, CurrentUser.user.User_ID);
                 switch (result.resultid)
                 {
                     case 0:
                         MessageBox.Show("Учётная запись была деактивирована.","Деактивация",MessageBoxButton.OK,MessageBoxImage.Information);
                         User a = context.User.Where(u => u.User_ID == c.userID).FirstOrDefault();
                         a = result.User;
-                        context.Actions.Add(result.Action);
+                        context.Operation.Add(result.Operation);
                         context.SaveChanges();
                         UpdateTabs();
                         break;
-                    default: break;
+                    default: 
+                        MessageBox.Show(result.errorText, "Деактивация", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
                 }
             }
             UpdateTabs();
@@ -119,18 +122,20 @@ namespace Metr
             UControl c = deaGrid.SelectedItem as UControl;
             if (MessageBox.Show("Вы уверены, что хотите восстановить учётную запись\n" + c.fullName + "?", "Восстановление", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                UControl.tResult result = UControl.recoverEmp(c.userID, User);
+                UControl.tResult result = UControl.recoverEmp(c.userID, CurrentUser.user.User_ID);
                 switch (result.resultid)
                 {
                     case 0:
                         MessageBox.Show("Учётная запись была восстановлена.", "Восстановление", MessageBoxButton.OK, MessageBoxImage.Information);
                         User a = context.User.Where(u => u.User_ID == c.userID).FirstOrDefault();
                         a = result.User;
-                        context.Actions.Add(result.Action);
+                        context.Operation.Add(result.Operation);
                         context.SaveChanges();
                         UpdateTabs();
                         break;
-                    default: break;
+                    default:
+                        MessageBox.Show(result.errorText, "Восстановление", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
                 }
             }
         }
@@ -160,29 +165,29 @@ namespace Metr
         {
             if (regGrid.SelectedItem == null)
             {
-                MessageBox.Show("Выберите учётную запись","Ошибка",MessageBoxButton.OK,MessageBoxImage.Information);
+                MessageBox.Show("Выберите учётную запись", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
             else
             {
-                User adm = context.User.Where(u => u.User_ID == User).FirstOrDefault();
-                int id = (regGrid.SelectedItem as Actions).UserID;
-                User user = context.User.Where(u=>u.User_ID==id).FirstOrDefault();
+                User adm = context.User.Where(u => u.User_ID == CurrentUser.user.User_ID).FirstOrDefault();
+                int id = (regGrid.SelectedItem as Operation).UserID;
+                User user = context.User.Where(u => u.User_ID == id).FirstOrDefault();
                 UserActivate userActivate = new UserActivate("Пользователю будет открыт доступ к системе\nГость - только просмотр данных\nПользователь - редактирование журнала\nАдминистратор - редактирование журнала и управление учётными записями");
                 userActivate.ShowDialog();
                 if (userActivate.DialogResult == true)
                 {
-
-                    var a = UControl.activateEmp(id, User , userActivate.selectedRole);
-                    user = a.User;
-                    string roletxt = context.Role.Where(r=>r.Role_ID==userActivate.selectedRole).FirstOrDefault().Title;
-                    context.Actions.Add(new Actions()
+                    var a = UControl.activateEmp(id, CurrentUser.user.User_ID, userActivate.selectedRole);
+                    if (a.resultid != 0)
                     {
-                        ActionDate = DateTime.Now,
-                        ActionText = adm.FullName + " открыл доступ с уровнем \"" + roletxt + "\" " + user.FullName,
-                        UserID = User,
-                        ComputerName = Environment.MachineName
-                    });
+                        MessageBox.Show(a.errorText, "Активация", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    user = a.User;
+                    string roletxt = context.Role.Where(r => r.Role_ID == userActivate.selectedRole).FirstOrDefault().Title;
+                    Operation op = context.Operation.Where(o => o.UserID == id).FirstOrDefault();
+                    op.ID_Status = 1;
+                    op.OperationText += "\nАктивировал " + adm.FullName;
                     context.SaveChanges();
                     MessageBox.Show("Активация учётной записи произведена", "Активация", MessageBoxButton.OK, MessageBoxImage.Information);
                     UpdateTabs();
@@ -209,27 +214,27 @@ namespace Metr
             }
             else
             {
-                User adm = context.User.Where(u => u.User_ID == User).FirstOrDefault();
-                int id = (regGrid.SelectedItem as Actions).UserID;
-                User user = context.User.Where(u => u.User_ID == id).FirstOrDefault();
-                UserActivate userActivate = new UserActivate("Пользователю будет открыт доступ к системе\nГость - только просмотр данных\nПользователь - редактирование журнала\nАдминистратор - редактирование журнала и управление учётными записями");
-                userActivate.ShowDialog();
-                if (userActivate.DialogResult == true)
+                User adm = context.User.Where(u => u.User_ID == CurrentUser.user.User_ID).FirstOrDefault();
+                Operation regOp = regGrid.SelectedItem as Operation;
+                User user = context.User.Where(u => u.User_ID == regOp.UserID).FirstOrDefault();
+                if (MessageBox.Show("Регистрация будет отменена без возможности отмены! Продолжить?", "Отмена регистрации", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
-
-                    var a = UControl.activateEmp(id, User, userActivate.selectedRole);
-                    user = a.User;
-                    string roletxt = context.Role.Where(r => r.Role_ID == userActivate.selectedRole).FirstOrDefault().Title;
-                    context.Actions.Add(new Actions()
+                    try
                     {
-                        ActionDate = DateTime.Now,
-                        ActionText = adm.FullName + " открыл доступ с уровнем \"" + roletxt + "\" " + user.FullName,
-                        UserID = User,
-                        ComputerName = Environment.MachineName
-                    });
-                    context.SaveChanges();
-                    MessageBox.Show("Активация учётной записи произведена", "Активация", MessageBoxButton.OK, MessageBoxImage.Information);
-                    UpdateTabs();
+                        Operation op = context.Operation.Where(o => o.UserID == regOp.UserID).FirstOrDefault();
+                        op.ID_Status = 3;
+                        op.OperationText += "\nОтменил " + adm.FullName;
+                        op.UserID = adm.User_ID;
+                        context.SaveChanges();
+                        context.User.Remove(user);
+                        context.SaveChanges();
+                        MessageBox.Show("Регистрация отменена", "Отмена регистрации", MessageBoxButton.OK, MessageBoxImage.Information);
+                        UpdateTabs();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.InnerException.Message.ToString(), "Отмена регистрации", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
         }

@@ -1,15 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="Хранилище MetrBaseModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <EntityType Name="Actions">
-    <Key>
-      <PropertyRef Name="Action_ID" />
-    </Key>
-    <Property Name="Action_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ActionDate" Type="date" Nullable="false" />
-    <Property Name="ActionText" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="UserID" Type="int" Nullable="false" />
-    <Property Name="ComputerName" Type="nvarchar(max)" Nullable="false" />
-  </EntityType>
   <EntityType Name="Device">
     <Key>
       <PropertyRef Name="Device_ID" />
@@ -89,18 +79,6 @@
     <Property Name="ULogin" Type="nvarchar(max)" Nullable="false" />
     <Property Name="UPass" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <Association Name="FK_Actions_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
-    <End Role="Actions" Type="Self.Actions" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="User_ID" />
-      </Principal>
-      <Dependent Role="Actions">
-        <PropertyRef Name="UserID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Device_Object">
     <End Role="Object" Type="Self.Object" Multiplicity="1" />
     <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -174,7 +152,6 @@
     </ReferentialConstraint>
   </Association>
   <EntityContainer Name="Хранилище MetrBaseModelContainer">
-    <EntitySet Name="Actions" EntityType="Self.Actions" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Device" EntityType="Self.Device" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Object" EntityType="Self.Object" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Operation" EntityType="Self.Operation" Schema="dbo" store:Type="Tables" />
@@ -183,10 +160,6 @@
     <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_Actions_User" Association="Self.FK_Actions_User">
-      <End Role="User" EntitySet="User" />
-      <End Role="Actions" EntitySet="Actions" />
-    </AssociationSet>
     <AssociationSet Name="FK_Device_Object" Association="Self.FK_Device_Object">
       <End Role="Object" EntitySet="Object" />
       <End Role="Device" EntitySet="Device" />

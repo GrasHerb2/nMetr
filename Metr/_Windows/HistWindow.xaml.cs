@@ -22,16 +22,32 @@ namespace Metr._Windows
     public partial class HistWindow : Window
     {
         int devId = 0;
+        int uId = 0;
         int preCount = 0;
         List<Operation> operations = new List<Operation>();
         DateTime temp = new DateTime();
-        public HistWindow(int devId)
+        public HistWindow(int devId = 0, int uId = 0)
         {
             InitializeComponent();
             this.devId = devId;
-            Title = "История операций по прибору: " + MetrBaseEn.GetContext().Device.Where(d => d.Device_ID == devId).FirstOrDefault().Name;
+            this.uId = uId;
 
-            Update();
+            if (uId != 0)
+            {
+                Title = "История операций с прибором: " + MetrBaseEn.GetContext().Device.Where(d => d.Device_ID == devId).FirstOrDefault().Name;
+                Update(1);
+            }
+
+            if (devId != 0)
+            {
+                Title = "История операций с прибором: " + MetrBaseEn.GetContext().Device.Where(d => d.Device_ID == devId).FirstOrDefault().Name;
+                Update(2);
+            }
+            
+            if(devId == 0 && uId == 0)
+            {
+                Update();
+            }
 
             searchCBType.ItemsSource = null;
             searchCBType.ItemsSource = operations.Select(o => o.OperationType.Title).Distinct().ToList();
@@ -39,9 +55,20 @@ namespace Metr._Windows
             searchCBUser.ItemsSource = null;
             searchCBUser.ItemsSource = operations.Select(o => o.User.FullName).Distinct().ToList();
         }
-        void Update()
+        void Update(int t = 0)
         {
-            operations = MetrBaseEn.GetContext(true).Device.Where(d => d.Device_ID == devId).FirstOrDefault().Operation.ToList();
+            switch (t)
+            {
+                default:
+                    operations = MetrBaseEn.GetContext().Operation.ToList();
+                    break;
+                case 1:
+                    operations = MetrBaseEn.GetContext(true).User.Where(d => d.User_ID == uId).FirstOrDefault().Operation.ToList();
+                    break;
+                case 2:
+                    operations = MetrBaseEn.GetContext(true).Device.Where(d => d.Device_ID == devId).FirstOrDefault().Operation.ToList();                    
+                    break;
+            }
             preCount = operations.Count();
             mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = operations;
@@ -69,6 +96,8 @@ namespace Metr._Windows
             operations = searchTxtDesc.Text != "" ? operations.Where(o => o.OperationText.Contains(searchTxtDesc.Text)).ToList() : operations;
 
             CountLbl.Content = "Записи:" + operations.Count + " из " + preCount;
+
+            operations = operations.OrderByDescending(o=>o.OperationDate).ToList();
 
             mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = operations;

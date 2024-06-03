@@ -4,17 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище MetrBaseModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Actions">
-          <Key>
-            <PropertyRef Name="Action_ID" />
-          </Key>
-          <Property Name="Action_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ActionDate" Type="date" Nullable="false" />
-          <Property Name="ActionText" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="ComputerName" Type="nvarchar(max)" Nullable="false" />
-        </EntityType>
+    <Schema Namespace="Хранилище MetrBaseModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Device">
           <Key>
             <PropertyRef Name="Device_ID" />
@@ -94,18 +84,6 @@
           <Property Name="ULogin" Type="nvarchar(max)" Nullable="false" />
           <Property Name="UPass" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Actions_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Actions" Type="Self.Actions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="User_ID" />
-            </Principal>
-            <Dependent Role="Actions">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Device_Object">
           <End Role="Object" Type="Self.Object" Multiplicity="1" />
           <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -179,7 +157,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="Хранилище MetrBaseModelContainer">
-          <EntitySet Name="Actions" EntityType="Self.Actions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Device" EntityType="Self.Device" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Object" EntityType="Self.Object" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Operation" EntityType="Self.Operation" Schema="dbo" store:Type="Tables" />
@@ -188,10 +165,6 @@
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Actions_User" Association="Self.FK_Actions_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Actions" EntitySet="Actions" />
-          </AssociationSet>
           <AssociationSet Name="FK_Device_Object" Association="Self.FK_Device_Object">
             <End Role="Object" EntitySet="Object" />
             <End Role="Device" EntitySet="Device" />
@@ -217,22 +190,10 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MetrBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Actions">
-          <Key>
-            <PropertyRef Name="Action_ID" />
-          </Key>
-          <Property Name="Action_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ActionDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="ActionText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="ComputerName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Actions_User" FromRole="Actions" ToRole="User" />
-        </EntityType>
         <EntityType Name="Device">
           <Key>
             <PropertyRef Name="Device_ID" />
@@ -321,22 +282,9 @@
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ULogin" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="UPass" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Actions" Relationship="Self.FK_Actions_User" FromRole="User" ToRole="Actions" />
           <NavigationProperty Name="Operation" Relationship="Self.FK_Operation_User" FromRole="User" ToRole="Operation" />
           <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
         </EntityType>
-        <Association Name="FK_Actions_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Actions" Type="Self.Actions" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="User_ID" />
-            </Principal>
-            <Dependent Role="Actions">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Device_Object">
           <End Role="Object" Type="Self.Object" Multiplicity="1" />
           <End Role="Device" Type="Self.Device" Multiplicity="*" />
@@ -410,7 +358,6 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="MetrBaseEn" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Actions" EntityType="Self.Actions" />
           <EntitySet Name="Device" EntityType="Self.Device" />
           <EntitySet Name="Object" EntityType="Self.Object" />
           <EntitySet Name="Operation" EntityType="Self.Operation" />
@@ -419,10 +366,6 @@
           <EntitySet Name="Role" EntityType="Self.Role" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
-          <AssociationSet Name="FK_Actions_User" Association="Self.FK_Actions_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Actions" EntitySet="Actions" />
-          </AssociationSet>
           <AssociationSet Name="FK_Device_Object" Association="Self.FK_Device_Object">
             <End Role="Object" EntitySet="Object" />
             <End Role="Device" EntitySet="Device" />
@@ -454,17 +397,6 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Хранилище MetrBaseModelContainer" CdmEntityContainer="MetrBaseEn">
-          <EntitySetMapping Name="Actions">
-            <EntityTypeMapping TypeName="MetrBaseModel.Actions">
-              <MappingFragment StoreEntitySet="Actions">
-                <ScalarProperty Name="Action_ID" ColumnName="Action_ID" />
-                <ScalarProperty Name="ActionDate" ColumnName="ActionDate" />
-                <ScalarProperty Name="ActionText" ColumnName="ActionText" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ComputerName" ColumnName="ComputerName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Device">
             <EntityTypeMapping TypeName="MetrBaseModel.Device">
               <MappingFragment StoreEntitySet="Device">

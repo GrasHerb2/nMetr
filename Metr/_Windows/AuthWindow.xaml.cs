@@ -11,7 +11,6 @@ namespace Metr
     /// </summary>
     public partial class AuthWindow : Window
     {
-        public CurrentUser authUser;
         public AuthWindow()
         {
             InitializeComponent();
@@ -39,11 +38,12 @@ namespace Metr
                     try
                     {
                         string log = UControl.Sha256Coding(loginTxt.Text);
-                        User u0 = MetrBaseEn.GetContext().User.Where(q => q.ULogin == log).FirstOrDefault();
-                        authUser = new CurrentUser() { Id = u0.User_ID, FullName = u0.FullName, RoleID = u0.RoleID };
-
+                        CurrentUser.user = MetrBaseEn.GetContext().User.Where(q => q.ULogin == log).Single();
+                        CurrentUser.user.ULogin = loginTxt.Text;
+                        CurrentUser.user.UPass = passTxt.Password;
+                        CurrentUser.user.Email += "";
                         if (logSaveRB.IsChecked.Value) SettingsClass.SaveLogin(loginTxt.Text);
-                        else SettingsClass.SaveLogin("↔");
+                        else SettingsClass.SaveLogin("");
 
                         this.DialogResult = true;
                         return;
@@ -75,7 +75,7 @@ namespace Metr
 
         private void readBtn_Click(object sender, RoutedEventArgs e)
         {
-            authUser = new CurrentUser() { Id = 1, FullName = "Гость", RoleID = 1 };
+            CurrentUser.user = new User() { User_ID = 1 };
 
             this.DialogResult = true;
             return;

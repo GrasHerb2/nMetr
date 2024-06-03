@@ -18,7 +18,7 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Width="1.5*" Header="Действие" Binding="{Binding ActionText}">
+                    <DataGridTextColumn Width="1.5*" Header="Тип операции" Binding="{Binding OperationType.Title}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -26,7 +26,15 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Width=".75*" Header="Дата" Binding="{Binding ActionDate, StringFormat=dd.MM.yyyy}">
+                    <DataGridTextColumn Width="1.5*" Header="Описание" Binding="{Binding OperationText}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width=".75*" Header="Дата" Binding="{Binding OperationDate, StringFormat=dd.MM.yyyy}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
