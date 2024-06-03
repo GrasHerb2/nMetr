@@ -23,9 +23,11 @@ namespace Metr._Windows
     {
         int devId = 0;
         int uId = 0;
+        int t = 0;
         int preCount = 0;
+        string tempS = "";
         List<Operation> operations = new List<Operation>();
-        DateTime temp = new DateTime();
+        DateTime tempDT = new DateTime();
         public HistWindow(int devId = 0, int uId = 0)
         {
             InitializeComponent();
@@ -34,41 +36,52 @@ namespace Metr._Windows
 
             if (uId != 0)
             {
-                Title = "История операций с прибором: " + MetrBaseEn.GetContext().Device.Where(d => d.Device_ID == devId).FirstOrDefault().Name;
-                Update(1);
+                t = 1;
+                Update();
             }
 
             if (devId != 0)
             {
                 Title = "История операций с прибором: " + MetrBaseEn.GetContext().Device.Where(d => d.Device_ID == devId).FirstOrDefault().Name;
-                Update(2);
+                t = 2;
+                Update();
             }
-            
-            if(devId == 0 && uId == 0)
+
+            if (devId == 0 && uId == 0)
             {
                 Update();
+            }
+        }
+        void Update()
+        {
+            operations = MetrBaseEn.GetContext(true).Operation.ToList();
+            switch (t)
+            {
+                default:
+                    searchCBUser.ItemsSource = null;
+                    searchCBUser.ItemsSource = operations.Select(o => o.User.FullName).Distinct().ToList();
+                    break;
+                case 1:
+                    searchCBUser.ItemsSource = null;
+                    searchCBUser.ItemsSource = operations.Select(o => o.User.FullName).Distinct().ToList();
+
+                    tempS = MetrBaseEn.GetContext().User.Where(u => u.User_ID == uId).Single().FullName;
+
+                    searchCBUser.Text = tempS;
+                    operations = searchCBUser.Text != "" ? operations.Where(o => o.User.FullName == tempS).ToList() : operations;
+                    break;
+                case 2:
+                    operations = MetrBaseEn.GetContext(true).Device.Where(d => d.Device_ID == devId).FirstOrDefault().Operation.ToList();
+
+                    searchCBUser.ItemsSource = null;
+                    searchCBUser.ItemsSource = operations.Select(o => o.User.FullName).Distinct().ToList();
+                    break;
             }
 
             searchCBType.ItemsSource = null;
             searchCBType.ItemsSource = operations.Select(o => o.OperationType.Title).Distinct().ToList();
 
-            searchCBUser.ItemsSource = null;
-            searchCBUser.ItemsSource = operations.Select(o => o.User.FullName).Distinct().ToList();
-        }
-        void Update(int t = 0)
-        {
-            switch (t)
-            {
-                default:
-                    operations = MetrBaseEn.GetContext().Operation.ToList();
-                    break;
-                case 1:
-                    operations = MetrBaseEn.GetContext(true).User.Where(d => d.User_ID == uId).FirstOrDefault().Operation.ToList();
-                    break;
-                case 2:
-                    operations = MetrBaseEn.GetContext(true).Device.Where(d => d.Device_ID == devId).FirstOrDefault().Operation.ToList();                    
-                    break;
-            }
+            operations = operations.OrderByDescending(o => o.OperationDate).ToList();
             preCount = operations.Count();
             mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = operations;
@@ -77,19 +90,19 @@ namespace Metr._Windows
         {
             Update();
 
-            if (DateStart.SelectedDate>DateEnd.SelectedDate && DateStart.SelectedDate!=null && DateEnd.SelectedDate!=null)
+            if (DateStart.SelectedDate > DateEnd.SelectedDate && DateStart.SelectedDate != null && DateEnd.SelectedDate != null)
             {
-                temp = DateEnd.SelectedDate.Value;
+                tempDT = DateEnd.SelectedDate.Value;
                 DateEnd.SelectedDate = DateStart.SelectedDate;
-                DateStart.SelectedDate = temp;
+                DateStart.SelectedDate = tempDT;
             }
 
 
-            operations = DateStart.SelectedDate!=null? operations.Where(o=> o.OperationDate>=DateStart.SelectedDate.Value).ToList() : operations;
+            operations = DateStart.SelectedDate != null ? operations.Where(o => o.OperationDate >= DateStart.SelectedDate.Value).ToList() : operations;
 
-            operations = DateEnd.SelectedDate!=null? operations.Where(o=> o.OperationDate<=DateEnd.SelectedDate.Value).ToList() : operations;
+            operations = DateEnd.SelectedDate != null ? operations.Where(o => o.OperationDate <= DateEnd.SelectedDate.Value).ToList() : operations;
 
-            operations = searchCBType.Text != "" ? operations.Where(o=> o.OperationType.Title == searchCBType.Text).ToList() : operations;
+            operations = searchCBType.Text != "" ? operations.Where(o => o.OperationType.Title == searchCBType.Text).ToList() : operations;
 
             operations = searchCBUser.Text != "" ? operations.Where(o => o.User.FullName == searchCBUser.Text).ToList() : operations;
 
@@ -97,7 +110,6 @@ namespace Metr._Windows
 
             CountLbl.Content = "Записи:" + operations.Count + " из " + preCount;
 
-            operations = operations.OrderByDescending(o=>o.OperationDate).ToList();
 
             mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = operations;

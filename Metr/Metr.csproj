@@ -174,9 +174,6 @@
     <Compile Include="User.cs">
       <DependentUpon>ModelDB.tt</DependentUpon>
     </Compile>
-    <Compile Include="_Windows\ActionsWindow.xaml.cs">
-      <DependentUpon>ActionsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Classes\UControl.cs" />
     <Compile Include="_Windows\DeviceWin.xaml.cs">
       <DependentUpon>DeviceWin.xaml</DependentUpon>
@@ -202,10 +199,6 @@
     <Compile Include="_Windows\UserManagmentWindow.xaml.cs">
       <DependentUpon>UserManagmentWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="_Windows\ActionsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="_Windows\AuthWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,4 +1,5 @@
-﻿using Metr.Classes;
+﻿using Metr._Windows;
+using Metr.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,8 +61,8 @@ namespace Metr
                 return;
             }
             UControl user = mainGrid.SelectedItem as UControl;
-            ActionsWindow actionsWindow = new ActionsWindow(user.userID);
-            actionsWindow.ShowDialog();
+            HistWindow histWindow = new HistWindow(0,user.userID);
+            histWindow.ShowDialog();
         }
         private void userActionsBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -107,7 +108,6 @@ namespace Metr
                         break;
                 }
             }
-            UpdateTabs();
         }
 
         private void userRecover_Click(object sender, RoutedEventArgs e)
@@ -141,15 +141,14 @@ namespace Metr
         }
         void deaActionsShow()
         {
-
             if (deaGrid.SelectedItem == null)
             {
                 MessageBox.Show("Выберите учётную запись", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             UControl user = deaGrid.SelectedItem as UControl;
-            ActionsWindow actionsWindow = new ActionsWindow(user.userID);
-            actionsWindow.ShowDialog();
+            HistWindow histWindow = new HistWindow(0,user.userID);
+            histWindow.ShowDialog();
         }
         private void deaActions_Click(object sender, RoutedEventArgs e)
         {
@@ -229,7 +228,6 @@ namespace Metr
                         context.User.Remove(user);
                         context.SaveChanges();
                         MessageBox.Show("Регистрация отменена", "Отмена регистрации", MessageBoxButton.OK, MessageBoxImage.Information);
-                        UpdateTabs();
                     }
                     catch (Exception ex)
                     {
@@ -237,6 +235,14 @@ namespace Metr
                     }
                 }
             }
+            UpdateTabs();
+        }
+
+        private void addUserBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RegWindow regWindow = new RegWindow(2);
+            regWindow.ShowDialog();
+            UpdateTabs();
         }
     }
 }

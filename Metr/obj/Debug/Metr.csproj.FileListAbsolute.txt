@@ -70,7 +70,6 @@ C:\Users\Gras\Source\Repos\GrasHerb\Metr\Metr\obj\Debug\Metr.exe
 C:\Users\Gras\Source\Repos\GrasHerb\Metr\Metr\obj\Debug\Metr.pdb
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\Metr.csproj.AssemblyReference.cache
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\StyleDictionary.baml
-C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\ActionsWindow.g.cs
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\AuthWindow.g.cs
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\ExportWindow.g.cs
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\MainWindow.g.cs
@@ -123,7 +122,6 @@ C:\Users\Gras\source\repos\Metr\Metr\bin\Debug\System.ValueTuple.xml
 C:\Users\Gras\source\repos\Metr\Metr\bin\Debug\ru\EntityFramework.resources.dll
 C:\Users\Gras\source\repos\Metr\Metr\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\App.baml
-C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\ActionsWindow.baml
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\AuthWindow.baml
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\ExportWindow.baml
 C:\Users\Gras\source\repos\Metr\Metr\obj\Debug\_Windows\MainWindow.baml

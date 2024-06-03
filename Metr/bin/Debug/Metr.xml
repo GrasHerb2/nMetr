@@ -251,19 +251,6 @@
             <param name="context">Контекст БД</param>
             <param name="user">Пользователь, восстанавляющий приборы</param>
         </member>
-        <member name="T:Metr.ActionsWindow">
-            <summary>
-            Логика взаимодействия для ActionsWindow.xaml
-            </summary>
-            <summary>
-            ActionsWindow
-            </summary>
-        </member>
-        <member name="M:Metr.ActionsWindow.InitializeComponent">
-            <summary>
-            InitializeComponent
-            </summary>
-        </member>
         <member name="T:Metr.DeviceWin">
             <summary>
             Логика взаимодействия для NewDeviceWin.xaml

@@ -286,11 +286,7 @@ namespace Metr.Classes
                 !d.Hidden
                 ).ToList();
 
-            if (Del)
-                deviceListMain = deviceListMain.Where(d =>
-                d.Delete
-                ).ToList();
-            else
+            if (!Del)
                 deviceListMain = deviceListMain.Where(d =>
                 !d.Delete
                 ).ToList();

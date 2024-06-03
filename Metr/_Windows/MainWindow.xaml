@@ -93,7 +93,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTemplateColumn MinWidth="100" Width="*" Header="Объект">
+                                <DataGridTemplateColumn MinWidth="100" Width="*" Header="Объект" CanUserSort="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Label Content="{Binding ObjectName}" />

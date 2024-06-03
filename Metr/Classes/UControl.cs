@@ -154,14 +154,13 @@ namespace Metr.Classes
                     return result;
                 }//в системе не может быть двух однинаковых логинов
 
-                if (!instant)
                 result.Operation = new Operation()
                 {
                     OperationDate = DateTime.Now,
                     UserID = 0,
-                    OperationText = "Регистрация\nКомпьютер:" + Environment.MachineName.ToString() + "\nФИО:" + newFullName + "\n" + DateTime.Now.ToShortDateString(),
+                    OperationText = "Регистрация\nКомпьютер:" + Environment.MachineName.ToString() + "\nФИО:" + newFullName + "\n" + DateTime.Now.ToShortDateString()+(instant ? "\nАктивировал " + CurrentUser.user.FullName : "") ,
                     ComputerName = Environment.MachineName.ToString(),
-                    ID_Status = 2,
+                    ID_Status = instant ? 1 : 2,
                     ID_Type = 1                    
                 };
                 newLogin = Sha256Coding(newLogin);
@@ -207,7 +206,7 @@ namespace Metr.Classes
             try
             {
                 var a = Sha256Coding(chgLogin);
-                if (context.User.Where(p => p.ULogin == a).Count() > 0)
+                if (chgLogin!=CurrentUser.currentULogin && context.User.Where(p => p.ULogin == a).Count() > 0)
                 {
                     result.resultid = 1;
                     result.errorText = "Логин занят, необходимо использовать иной";
@@ -231,7 +230,7 @@ namespace Metr.Classes
                     ComputerName = Environment.MachineName.ToString(),
                     OperationText = CurrentUser.user.FullName + " изменил учётную запись",
                     ID_Status = 1,
-                    ID_Type = 2
+                    ID_Type = 9
                 };
 
                 return result;

@@ -591,6 +591,11 @@ namespace Metr
 
         private void chUserBtn_Click(object sender, RoutedEventArgs e)
         {
+            if(CurrentUser.user.User_ID == 1)
+            {
+                MessageBox.Show("Нельзя редактировать учётную запись 'Гость'","Предупреждение",MessageBoxButton.OK,MessageBoxImage.Stop);
+                return;
+            }
             RegWindow regWindow = new RegWindow(3);
             regWindow.ShowDialog();
         }

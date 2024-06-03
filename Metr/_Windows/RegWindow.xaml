@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Metr"
         mc:Ignorable="d"
-        Title="" Width="340" ResizeMode="NoResize" Height="400" Closing="Window_Closing">
+        Title="" Width="340" ResizeMode="NoResize" Height="400">
     <Viewbox>
     <StackPanel Width="340">
         <Label Margin="5" Content="ФИО"/>
@@ -16,7 +16,7 @@
         <TextBox Margin="5" FontSize="20" x:Name="pTxt"/>
         <Label Margin="5" Content="E-Mail (не обязательно)"/>
         <TextBox Margin="5" FontSize="20" x:Name="mTxt"/>
-        <Button Margin="15" Content="Отправить" x:Name="cBtn" Background="White" BorderBrush="White" Click="cBtn_Click"/>
+        <Button Margin="15" Content="" x:Name="cBtn" Background="White" BorderBrush="White" Click="cBtn_Click"/>
     </StackPanel>
     </Viewbox>
 </Window>

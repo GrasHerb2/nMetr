@@ -1,5 +1,7 @@
 ﻿using Metr.Classes;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,9 +41,9 @@ namespace Metr
                     {
                         string log = UControl.Sha256Coding(loginTxt.Text);
                         CurrentUser.user = MetrBaseEn.GetContext().User.Where(q => q.ULogin == log).Single();
-                        CurrentUser.user.ULogin = loginTxt.Text;
-                        CurrentUser.user.UPass = passTxt.Password;
-                        CurrentUser.user.Email += "";
+                        CurrentUser.currentULogin = loginTxt.Text;
+                        CurrentUser.currentUPass = passTxt.Password;
+                        CurrentUser.currentUEmail += "";
                         if (logSaveRB.IsChecked.Value) SettingsClass.SaveLogin(loginTxt.Text);
                         else SettingsClass.SaveLogin("");
 

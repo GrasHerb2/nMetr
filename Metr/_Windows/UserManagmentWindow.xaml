@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Metr"
         mc:Ignorable="d"
-        Title="Пользователи" Height="450" Width="800">
+        Title="Пользователи" Height="540" Width="770">
     
     <Viewbox VerticalAlignment="Top" Width="800">
         <StackPanel>
-            <TabControl TabStripPlacement="Left">
+            <TabControl TabStripPlacement="Top">
                 <TabItem Header="Пользователи">
 
                     <DataGrid x:Name="mainGrid" Height="430" Width="700" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
@@ -119,8 +119,8 @@
                     </DataGrid>
 
                 </TabItem>
-            </TabControl>        
-        
+            </TabControl>
+            <Button Content="Добавить уч.запись" Width="200" Margin="500,5,0,5" x:Name="addUserBtn" Click="addUserBtn_Click"/>
         </StackPanel>
     </Viewbox>
 </Window>

@@ -30,25 +30,30 @@ namespace Metr
             switch (windowType)
             {
                 case 1:
+                    cBtn.Content = "Отправить";
+
                     Title = "Запрос на добавление учётной записи";
                     break;
                 case 2:
-                    Title = "Добавление учётной записи";
+                    cBtn.Content = "Создать";
+
+                    Title = "Создание учётной записи";
                     break;
                 case 3:
                     Title = "Изменение учётной записи";
 
-                    fNameTxt.Text = CurrentUser.user.FullName;
-                    lTxt.Text = CurrentUser.user.ULogin;
-                    pTxt.Text = CurrentUser.user.UPass;
-                    mTxt.Text = CurrentUser.user.Email;
+                    cBtn.Content = "Сохранить";
 
+                    fNameTxt.Text = CurrentUser.user.FullName;
+                    lTxt.Text = CurrentUser.currentULogin;
+                    pTxt.Text = CurrentUser.currentUPass;
+                    mTxt.Text = CurrentUser.user.Email;
                     break;
             }
         }
 
         private void cBtn_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             if (string.IsNullOrEmpty(lTxt.Text) || string.IsNullOrEmpty(pTxt.Text) || string.IsNullOrEmpty(fNameTxt.Text))
             {
                 MessageBox.Show("Все поля, кроме почты, обязательны", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Stop);
@@ -85,13 +90,40 @@ namespace Metr
                         }
 
                     }
-
                     break;
+
                 case 2:
 
-                    
-
+                    UserActivate userActivate = new UserActivate("Пользователю будет открыт доступ к системе\nГость - только просмотр данных\nПользователь - редактирование журнала\nАдминистратор - редактирование журнала и управление учётными записями");
+                    userActivate.ShowDialog();
+                    if (userActivate.DialogResult != true) { return; }
+                    result = UControl.newEmployee(lTxt.Text, pTxt.Text, fNameTxt.Text, mTxt.Text != "" ? mTxt.Text : "-", true, userActivate.selectedRole);
+                    if (result.resultid != 0)
+                    {
+                        MessageBox.Show(result.errorText, "Сообщение", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    else
+                    {
+                        switch (MessageBox.Show("Вы уверены, что хотите добавить пользователя?", "Подтверждение", MessageBoxButton.YesNoCancel, MessageBoxImage.Question))
+                        {
+                            case MessageBoxResult.Yes:
+                                context.User.Add(result.User);
+                                result.Operation.UserID = CurrentUser.user.User_ID;
+                                context.Operation.Add(result.Operation);
+                                context.SaveChanges();
+                                MessageBox.Show("Учётная запись создана", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                this.DialogResult = true;
+                                return;
+                            case MessageBoxResult.No:
+                                MessageBox.Show("Добавление отменено", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                return;
+                            case MessageBoxResult.Cancel:
+                                break;
+                        }
+                    }
                     break;
+
                 case 3:
 
                     result = UControl.redactEmployee(lTxt.Text, pTxt.Text, fNameTxt.Text, mTxt.Text != "" ? mTxt.Text : "-");
@@ -118,6 +150,8 @@ namespace Metr
                                 context.Operation.Add(result.Operation);
                                 context.SaveChanges();
                                 MessageBox.Show("Учётная запись изменена", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                CurrentUser.user = context.User.Where(u => u.User_ID == CurrentUser.user.User_ID).FirstOrDefault();
+                                CurrentUser.Upd(lTxt.Text, pTxt.Text, mTxt.Text + "");
                                 this.DialogResult = true;
                                 return;
                             case MessageBoxResult.No:
@@ -126,17 +160,9 @@ namespace Metr
                             case MessageBoxResult.Cancel:
                                 break;
                         }
-
                     }
-
                     break;
             }
-
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (windowType == 3) MessageBox.Show("Изменения отменены", "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
