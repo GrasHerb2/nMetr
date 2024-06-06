@@ -45,7 +45,6 @@ namespace Metr.Classes
             UserDataRegister.Clear();
             foreach (User user in con.User.Where(u=>u.User_ID!=1).ToList())
             {
-                if (!user.ULogin.Contains("___"))
                 UserData.Add(new UControl()
                 {
                     userID = user.User_ID,
@@ -55,19 +54,11 @@ namespace Metr.Classes
                     register = user.UPass.Contains("___"),
                     deactive = user.ULogin.Contains("___")
                 });
-                else
-                    UserDataDeactive.Add(new UControl()
-                    {
-                        userID = user.User_ID,
-                        fullName = user.FullName,
-                        roleID = user.RoleID,
-                        roleTitle = user.Role.Title,
-                        register = false
-                    });
-                UserDataRegister = UserData.Where(u=>u.register).ToList();
-                UserData = UserData.Where(u=>!u.register).ToList();
-            }            
-            
+            }
+            UserDataRegister = UserData.Where(u => u.register).ToList();
+            UserDataDeactive = UserData.Where (u => u.deactive).ToList();
+            UserData = UserData.Where(u => !u.register && !u.deactive).ToList();
+
         }
 
 
@@ -334,7 +325,7 @@ namespace Metr.Classes
                 User actuser = context.User.Where(p => p.User_ID == actIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
 
-                actuser.UPass = actuser.UPass.Remove(0, 3);
+                actuser.UPass = actuser.UPass.Replace("___","");
                 actuser.RoleID = role;
 
                 result.User = actuser;

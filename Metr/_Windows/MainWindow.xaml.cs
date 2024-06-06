@@ -86,13 +86,14 @@ namespace Metr
         {
             try
             {
+                DeviceData.dataUpdate();
+
                 Dispatcher.Invoke(new Action(() =>
                 {
                     objNames = MetrBaseEn.GetContext().Object.Select(o => o.Name).ToList();
                     pBar.Visibility = Visibility.Visible;
                 }));
-
-                DeviceData.dataUpdate();
+                
                 startSearch();
 
                 Dispatcher.Invoke(new Action(() =>
