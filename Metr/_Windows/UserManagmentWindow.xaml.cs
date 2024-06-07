@@ -27,11 +27,11 @@ namespace Metr
         public UserManagmentWindow()
         {
             InitializeComponent();            
-            context = MetrBaseEn.GetContext();
             UpdateTabs();
         }
         void UpdateTabs() 
         {
+            context = MetrBaseEn.GetContext();
             UControl.UpdateUsers(context);
 
             register.Clear();
@@ -171,7 +171,6 @@ namespace Metr
             {
                 User adm = context.User.Where(u => u.User_ID == CurrentUser.user.User_ID).FirstOrDefault();
                 int id = (regGrid.SelectedItem as Operation).UserID;
-                User user = context.User.Where(u => u.User_ID == id).FirstOrDefault();
                 UserActivate userActivate = new UserActivate("Пользователю будет открыт доступ к системе\nГость - только просмотр данных\nПользователь - редактирование журнала\nАдминистратор - редактирование журнала и управление учётными записями");
                 userActivate.ShowDialog();
                 if (userActivate.DialogResult == true)
@@ -181,13 +180,7 @@ namespace Metr
                     {
                         MessageBox.Show(a.errorText, "Активация", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
-                    }
-                    user = a.User;
-                    string roletxt = context.Role.Where(r => r.Role_ID == userActivate.selectedRole).FirstOrDefault().Title;
-                    Operation op = context.Operation.Where(o => o.UserID == id).FirstOrDefault();
-                    op.ID_Status = 1;
-                    op.OperationText += "\nАктивировал " + adm.FullName;
-                    context.SaveChanges();
+                    }                    
                     MessageBox.Show("Активация учётной записи произведена", "Активация", MessageBoxButton.OK, MessageBoxImage.Information);
                     UpdateTabs();
                 }

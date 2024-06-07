@@ -85,10 +85,11 @@ namespace Metr._Windows
             preCount = operations.Count();
             mainGrid.ItemsSource = null;
             mainGrid.ItemsSource = operations;
+
+            CountLbl.Content = "Записи:" + operations.Count + " из " + preCount;
         }
         void Search()
         {
-            Update();
 
             if (DateStart.SelectedDate > DateEnd.SelectedDate && DateStart.SelectedDate != null && DateEnd.SelectedDate != null)
             {
@@ -116,12 +117,7 @@ namespace Metr._Windows
         }
         private void restoreBtn_Click(object sender, RoutedEventArgs e)
         {
-            searchCBType.Text = "";
-            DateStart.SelectedDate = null;
-            DateEnd.SelectedDate = null;
-            searchCBUser.Text = "";
-            searchTxtDesc.Text = "";
-            Search();
+            Update();
         }
 
         private void searchBtn_Click(object sender, RoutedEventArgs e)

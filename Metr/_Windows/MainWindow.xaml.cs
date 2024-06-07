@@ -1,4 +1,5 @@
-﻿using Metr._Windows;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Metr._Windows;
 using Metr.Classes;
 using System;
 using System.Collections.Generic;
@@ -111,6 +112,10 @@ namespace Metr
 
                     pBar.Visibility = Visibility.Collapsed;
                     searchTBObj.ItemsSource = (context.Object.OrderBy(d => d.Name).Select(d => d.Name).ToList());
+
+                    deviceGrid.SelectedIndex = deviceGrid.Items.Count != 0 ? 0:-1;
+                    excGrid.SelectedIndex = excGrid.Items.Count != 0 ? 0 : -1;
+                    pprGrid.SelectedIndex = pprGrid.Items.Count != 0 ? 0 : -1;
                 }));
             }
             catch (Exception ex)
@@ -586,8 +591,20 @@ namespace Metr
 
         private void cHist_Click(object sender, RoutedEventArgs e)
         {
-            HistWindow histWindow = new HistWindow((deviceGrid.SelectedItems.Count > 0 ? deviceGrid.SelectedItems[0] as DeviceData : excGrid.SelectedItems[0] as DeviceData).ID);
-            histWindow.Show();
+            try
+            {
+                if (mainTab.SelectedIndex == 0)
+                {
+                    HistWindow histWindow = new HistWindow((deviceGrid.SelectedCells[0].Item as DeviceData).ID);
+                    histWindow.Show();
+                }
+                if (mainTab.SelectedIndex == 2)
+                {
+                    HistWindow histWindow = new HistWindow((excGrid.SelectedCells[0].Item as DeviceData).ID);
+                    histWindow.Show();
+                }
+            }
+            catch { }
         }
 
         private void chUserBtn_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -319,17 +320,25 @@ namespace Metr.Classes
         /// <returns>Возвращает объект класса tResult хранящий объект активироанной учётной записи, запись в журнал аудита и код операции: 0=Операция успешна  -1=Ошибка активирования</returns>
         public static tResult activateEmp(int actIndex, int admIndex, int role)
         {
+            context = MetrBaseEn.GetContext();
             tResult result = new tResult();
             try
             {
                 User actuser = context.User.Where(p => p.User_ID == actIndex).FirstOrDefault();
                 User admuser = context.User.Where(p => p.User_ID == admIndex).FirstOrDefault();
 
+
                 actuser.UPass = actuser.UPass.Replace("___","");
+
                 actuser.RoleID = role;
 
-                result.User = actuser;
+                string roletxt = context.Role.Where(r => r.Role_ID == role).FirstOrDefault().Title;
 
+                Operation op = context.Operation.Where(o => o.UserID == actIndex).FirstOrDefault();
+
+                op.ID_Status = 1;
+                op.OperationText += "\nАктивировал " + admuser.FullName;
+                context.SaveChanges();
                 result.resultid = 0;
 
                 return result;
