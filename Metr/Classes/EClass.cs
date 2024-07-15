@@ -148,7 +148,8 @@ namespace Metr.Classes
                 devs = devs.Where(d => d.FNum != "Н/Д").ToList();
             }
 
-            devs = devs.OrderByDescending(x => x.ObjectName).ThenBy(x => x.Name).ThenBy(x => x.ExpDate).ToList();
+            devs = devs.OrderByDescending(x => x.ExpDate).ThenBy(x => x.ObjectName).ThenBy(x => x.Name).ToList();
+
             if (settings.Field.Contains(8)) devs = devs.OrderBy(x => x.pprMonthDate).ToList();
 
             string save = "";

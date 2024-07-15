@@ -336,7 +336,7 @@ namespace Metr
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, device.Period, device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -459,7 +459,7 @@ namespace Metr
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, device.Period, device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };
@@ -479,7 +479,7 @@ namespace Metr
                 {
                     DeviceData device = e.Row.Item as DeviceData;
                     Device dev = context.Device.Where(d => d.Device_ID == device.ID).FirstOrDefault();
-                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, int.Parse(device.Period), device.Note, CurrentUser.user.User_ID);
+                    DeviceData.DeviceEdit(dev, device.Name, device.ObjectName, device.FNum, device.Param, device.MetrData, device.ExpDate, device.Period, device.Note, CurrentUser.user.User_ID);
                 }
                 else MessageBox.Show("Для редактирования необходимо иметь роль 'Пользователь' или выше");
                 Thread thread = new Thread(UpdateTabs) { IsBackground = true };

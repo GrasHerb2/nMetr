@@ -51,7 +51,7 @@ namespace Metr
 
             if (add)
             {
-                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, chbPPR.IsChecked.Value, CurrentUser.user.User_ID))
+                switch (DeviceData.NewDevice(nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, periodTxt.Text, noteTxt.Text, chbPPR.IsChecked.Value, CurrentUser.user.User_ID))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;
@@ -64,7 +64,7 @@ namespace Metr
             }
             else 
             {
-                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, int.Parse(periodTxt.Text), noteTxt.Text, CurrentUser.user.User_ID, chbPPR.IsChecked.Value))
+                switch(DeviceData.DeviceEdit(dev,nameTxt.Text, objectCB.Text, numTxt.Text, paramTxt.Text, metrDataTxt.Text, expDatePicker.SelectedDate, periodTxt.Text, noteTxt.Text, CurrentUser.user.User_ID, chbPPR.IsChecked.Value))
                 {
                     case MessageBoxResult.Yes:
                         DialogResult = true;

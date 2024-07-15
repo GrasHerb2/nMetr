@@ -186,7 +186,7 @@
             <param name="Exp">(Для Основного) Выделение даты просроченых приборов</param>
             <returns>Возвращает deviceList</returns>
         </member>
-        <member name="M:Metr.Classes.DeviceData.NewDevice(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Int32,System.String,System.Boolean,System.Int32)">
+        <member name="M:Metr.Classes.DeviceData.NewDevice(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.Boolean,System.Int32)">
             <summary>
             Метод добавления нового прибора
             </summary>
@@ -202,7 +202,7 @@
             <param name="user">Пользоваетль добавляющий прибор</param>
             <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
         </member>
-        <member name="M:Metr.Classes.DeviceData.DeviceEdit(Metr.Device,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.Int32,System.String,System.Int32,System.Nullable{System.Boolean})">
+        <member name="M:Metr.Classes.DeviceData.DeviceEdit(Metr.Device,System.String,System.String,System.String,System.String,System.String,System.Nullable{System.DateTime},System.String,System.String,System.Int32,System.Nullable{System.Boolean})">
             <summary>
             Метод изменения прибора
             </summary>

@@ -135,46 +135,46 @@
     </ApplicationDefinition>
     <Compile Include="Classes\EClass.cs" />
     <Compile Include="Classes\SettingsClass.cs" />
+    <Compile Include="Classes\UControl.cs" />
     <Compile Include="Device.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelDB.Context.cs">
+    <Compile Include="MetrBase.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelDB.Context.tt</DependentUpon>
+      <DependentUpon>MetrBase.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelDB.cs">
+    <Compile Include="MetrBase.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelDB.Designer.cs">
+    <Compile Include="MetrBase.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ModelDB.edmx</DependentUpon>
+      <DependentUpon>MetrBase.edmx</DependentUpon>
     </Compile>
     <Compile Include="Object.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="Operation.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationStatus.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="OperationType.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="Role.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">
-      <DependentUpon>ModelDB.tt</DependentUpon>
+      <DependentUpon>MetrBase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Classes\UControl.cs" />
     <Compile Include="_Windows\DeviceWin.xaml.cs">
       <DependentUpon>DeviceWin.xaml</DependentUpon>
     </Compile>
@@ -275,12 +275,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EntityDeploy Include="ModelDB.edmx">
+    <EntityDeploy Include="MetrBase.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ModelDB.Designer.cs</LastGenOutput>
+      <LastGenOutput>MetrBase.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="ModelDB.edmx.diagram">
-      <DependentUpon>ModelDB.edmx</DependentUpon>
+    <None Include="MetrBase.edmx.diagram">
+      <DependentUpon>MetrBase.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -313,15 +313,15 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ModelDB.Context.tt">
+    <Content Include="MetrBase.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelDB.edmx</DependentUpon>
-      <LastGenOutput>ModelDB.Context.cs</LastGenOutput>
+      <DependentUpon>MetrBase.edmx</DependentUpon>
+      <LastGenOutput>MetrBase.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="ModelDB.tt">
+    <Content Include="MetrBase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ModelDB.edmx</DependentUpon>
-      <LastGenOutput>ModelDB.cs</LastGenOutput>
+      <DependentUpon>MetrBase.edmx</DependentUpon>
+      <LastGenOutput>MetrBase.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

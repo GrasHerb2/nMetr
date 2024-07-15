@@ -316,7 +316,7 @@ namespace Metr.Classes
         /// <param name="noPPR">Отслеживание ППР </param>
         /// <param name="user">Пользоваетль добавляющий прибор</param>
         /// <returns>Возвращает MessageBoxResult где: Yes - добавление подтверждено, No - добавление отмененно пользователем, Cancel - добавление отменено по иным причинам, None - добавление отменено системой</returns>
-        public static MessageBoxResult NewDevice(string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, bool noPPR, int user)
+        public static MessageBoxResult NewDevice(string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, string Period, string NoteText, bool noPPR, int user)
         {
             MetrBaseEn context = MetrBaseEn.GetContext();
 
@@ -392,7 +392,7 @@ namespace Metr.Classes
         /// <param name="user">Пользователь, производящий изменение</param>
         /// <param name="noPPR">Прохождение ППР</param>
         /// <returns>Возвращает MessageBoxResult где: Yes - изменение подтверждено, No - изменение отмененно пользователем, Cancel - изменение отменено по иным причинам, None - изменение отменено системой</returns>
-        public static MessageBoxResult DeviceEdit(Device dev, string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, int Period, string NoteText, int user, bool? noPPR = null)
+        public static MessageBoxResult DeviceEdit(Device dev, string Name, string ObjectName, string FNum, string Param, string MetrData, DateTime? ExpDate, string Period, string NoteText, int user, bool? noPPR = null)
         {
             MetrBaseEn context = MetrBaseEn.GetContext();
             
@@ -417,7 +417,7 @@ namespace Metr.Classes
                 else
                     return MessageBoxResult.Cancel;
             
-            log += dev.PPR_Period.Value == Period ? "" : dev.PPR_Period + "->" + Period + "\n";
+            log += dev.PPR_Period == Period ? "" : dev.PPR_Period + "->" + Period + "\n";
             if (noPPR != null)
             log += dev.PPR_Removed.Value && !noPPR.Value ? "\n>ППР: Включён\n" : !dev.PPR_Removed.Value && noPPR.Value ? "\nППР: Исключён\n" : "";       
 
