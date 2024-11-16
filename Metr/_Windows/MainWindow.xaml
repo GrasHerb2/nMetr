@@ -19,6 +19,7 @@
                 <MenuItem Header="Доп. функции">
                     <MenuItem Header="Пользователи" x:Name="userBtn" Click="userBtn_Click"/>
                     <MenuItem Header="Журнал действий" x:Name="journalBtn" Click="journalBtn_Click"/>
+                    <MenuItem Header="Изменение объектов" x:Name="objactBtn" Click="objactBtn_Click"/>
                 </MenuItem>
                 <Separator/>
                 <MenuItem x:Name="chUserBtn" Header="Редактировать уч. запись" Click="chUserBtn_Click"/>
@@ -361,18 +362,18 @@
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <StackPanel >
                             <Label Content="По номеру"/>
-                            <TextBox TabIndex="2" x:Name="searchTBNum" Margin="5" Width="200"  HorizontalAlignment="Left"/>
+                            <TextBox TabIndex="3" x:Name="searchTBNum" Margin="5" Width="200"  HorizontalAlignment="Left"/>
                         </StackPanel>
                         <StackPanel>
                             <Label Content="По названию"/>
-                            <TextBox TabIndex="3" x:Name="searchTBName" Margin="5" Width="200"  HorizontalAlignment="Left"/>
+                            <TextBox TabIndex="4" x:Name="searchTBName" Margin="5" Width="200"  HorizontalAlignment="Left"/>
                         </StackPanel>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Grid.RowSpan="2" Orientation="Horizontal">
                         <StackPanel Margin="0,0,5,0">
                             <Label Content="По объекту"/>
-                            <ComboBox IsEditable="True" Width="200" Margin="0,5" Height="20" x:Name="searchTBObj" TabIndex="4">
+                            <ComboBox IsEditable="True" Width="200" Margin="0,5" Height="20" x:Name="searchTBObj" TabIndex="2">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock MouseLeftButtonUp="searchTBObjItem_MouseLeftButtonUp" x:Name="searchTBObjItem" Width="200" Margin="-4" Text="{Binding}"/>

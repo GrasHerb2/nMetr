@@ -279,3 +279,5 @@ C:\Users\student\source\repos\nMetr\Metr\obj\Debug\Metr.csproj.CoreCompileInputs
 C:\Users\student\source\repos\nMetr\Metr\obj\Debug\Metr.csproj.CopyComplete
 C:\Users\student\source\repos\nMetr\Metr\obj\Debug\Metr.exe
 C:\Users\student\source\repos\nMetr\Metr\obj\Debug\Metr.pdb
+C:\Users\Gras\source\repos\nMetr\Metr\obj\Debug\_Windows\ObjectManagment.g.cs
+C:\Users\Gras\source\repos\nMetr\Metr\obj\Debug\_Windows\ObjectManagment.baml

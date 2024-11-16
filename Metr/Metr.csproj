@@ -184,6 +184,9 @@
     <Compile Include="_Windows\HistWindow.xaml.cs">
       <DependentUpon>HistWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="_Windows\ObjectManagment.xaml.cs">
+      <DependentUpon>ObjectManagment.xaml</DependentUpon>
+    </Compile>
     <Compile Include="_Windows\RegWindow.xaml.cs">
       <DependentUpon>RegWindow.xaml</DependentUpon>
     </Compile>
@@ -229,6 +232,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="_Windows\DeviceWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="_Windows\ObjectManagment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

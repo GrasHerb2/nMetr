@@ -364,7 +364,7 @@ namespace Metr.Classes
                     };
                     context.Device.Add(device);
                     context.SaveChanges();
-                    tempId = context.Device.Last().Device_ID;
+                    tempId = context.Device.ToList().Last().Device_ID;
                     context.Operation.Add(new Operation() { UserID = user, OperationDate = DateTime.Now, OperationText = "Добавление прибора\n" + log, ComputerName = Environment.MachineName, ID_Status = 1, ID_Type = 3, ID_Device = tempId });
                     context.SaveChanges();
                     return MessageBoxResult.Yes;

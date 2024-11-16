@@ -557,24 +557,26 @@ namespace Metr
         {
             if (e.Key == Key.Enter)
             {
-                if (searchTBObj.Text != "")
+                if (searchTBObj.Text != "" || searchTBObj.IsFocused)
                 {
                     objectsUpdate(searchTBObj.Text);
                     searchTBObj.Text = "";
                     e.Handled = true;
                 }
 
-                else if (mainTab.IsFocused)
+                else if (mainTab.IsFocused || searchTBName.IsFocused || searchTBNum.IsFocused)
                 {
                     Thread thread = new Thread(startSearch);
                     thread.Start();
+                    e.Handled = true;
                 }
 
                 Control s = e.Source as Control;
                 if (s != null)
                 {
-                    s.MoveFocus(new TraversalRequest(FocusNavigationDirection.First));
-                }
+                    s.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                    e.Handled = true;
+                }//При нажатии enter передвигает вперёд; Нужно сделать какую нибудь остановку на кнопке поиска, но оставить возможность применения изменений на enter в таблицах
 
             }
         }
@@ -616,6 +618,11 @@ namespace Metr
             }
             RegWindow regWindow = new RegWindow(3);
             regWindow.ShowDialog();
+        }
+
+        private void objactBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
