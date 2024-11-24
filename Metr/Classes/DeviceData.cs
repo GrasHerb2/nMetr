@@ -136,10 +136,30 @@ namespace Metr.Classes
         /// <param name="pprDate">(Для ППР) Отображение только с ППР текущего месяца</param>
         /// <param name="Exp">(Для Основного) Выделение даты просроченых приборов</param>
         /// <returns>Возвращает deviceList</returns>
-        public static List<DeviceData> Search(List<string> dSearch, List<string> objects, DateTime searchStart, DateTime searchEnd, bool Hid, bool Del, bool pprDate = false, bool Exp = false)
+        public static List<DeviceData> Search(List<string> dSearch, List<string> objects, DateTime searchStart, DateTime searchEnd, bool Hid, bool Del, bool pprDate = false, bool Exp = false, int CustomMonthPPR = 0, int CustomYearPPR = 0)
         {
             deviceListMain = deviceList;
             int total = deviceList.Count;
+
+            int pprYear = CustomYearPPR == 0 ? DateTime.Now.Year : CustomYearPPR;
+            if (pprYear!= DateTime.Now.Year)
+            {
+                foreach (DeviceData a in deviceList)
+                {
+                    if (a.pprDate1 != null) 
+                    {
+                        a.pprDate1 = new DateTime(pprYear, a.pprDate1.Value.Month, a.pprDate1.Value.Day);
+                        a.pprDate2 = new DateTime(pprYear, a.pprDate2.Value.Month, a.pprDate2.Value.Day);
+                        a.pprDate3 = new DateTime(pprYear, a.pprDate3.Value.Month, a.pprDate3.Value.Day);
+                        a.pprDate4 = new DateTime(pprYear, a.pprDate4.Value.Month, a.pprDate4.Value.Day);
+                        
+                    }
+                }
+            }
+
+            int pprMonth = CustomMonthPPR == 0 ? DateTime.Now.Month : CustomMonthPPR;
+
+
 
             deviceListExc = deviceListMain.Where(d =>
                 d.Delete
@@ -247,22 +267,22 @@ namespace Metr.Classes
             if (pprDate)
             {
                 deviceListPPR = deviceListPPR.Where(d =>
-                (d.pprDate1.Value.Month == DateTime.Now.Month) ||
-                (d.pprDate2.Value.Month == DateTime.Now.Month) ||
-                (d.pprDate3.Value.Month == DateTime.Now.Month) ||
-                (d.pprDate4.Value.Month == DateTime.Now.Month)
+                (d.pprDate1.Value.Month == pprMonth) ||
+                (d.pprDate2.Value.Month == pprMonth) ||
+                (d.pprDate3.Value.Month == pprMonth) ||
+                (d.pprDate4.Value.Month == pprMonth)
                 ).ToList();
 
                 List<int> WorkingDays = new List<int>();
                 List<int> DeviceDays = new List<int>();
 
-                int NowDaysInMonth = DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month);
+                int NowDaysInMonth = DateTime.DaysInMonth(pprYear, pprMonth);
 
                 DayOfWeek dayOfWeek;
 
                 for (int i = 1; i <= NowDaysInMonth; i++)
                 {
-                    dayOfWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, i).DayOfWeek;
+                    dayOfWeek = new DateTime(pprYear, pprMonth, i).DayOfWeek;
                     if (dayOfWeek != DayOfWeek.Sunday && dayOfWeek != DayOfWeek.Saturday)
                     {
                         WorkingDays.Add(i);
@@ -275,7 +295,7 @@ namespace Metr.Classes
 
                 for (int i = 0; i < deviceListPPR.Count; i++)
                 {
-                    deviceListPPR[i].pprMonthDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DeviceDays[i]);
+                    deviceListPPR[i].pprMonthDate = new DateTime(pprYear, pprMonth, DeviceDays[i]);
                 }
 
                 deviceListPPR.OrderBy(d => d.ObjectName);

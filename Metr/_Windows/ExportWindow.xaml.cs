@@ -2,8 +2,11 @@
 using Metr.Classes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,16 +19,20 @@ namespace Metr._Windows
     /// </summary>
     public partial class ExportWindow : Window
     {
-        List<Classes.Column> Columns = new List<Classes.Column>();
+        ObservableCollection<Classes.Column> Columns = new ObservableCollection<Classes.Column>();
         EClass localSettings = new EClass();
         public ExportWindow()
         {
             InitializeComponent();
-            EClass.UpdPresets();
 
+            PPRMonthTxt.SelectedIndex = DateTime.Now.Month - 1;
+            PPRYearTxt.Text = DateTime.Now.Year.ToString();
+
+            EClass.UpdPresets();
             UpdateSettings(EClass.Presets[0]);
             TableTypeCmB.SelectedIndex = 0;
         }
+
         void UpdateSettings(EClass a)
         {
             TableTypeCmB.ItemsSource = EClass.Presets.Select(p => p.Name).ToList();
@@ -56,6 +63,8 @@ namespace Metr._Windows
                 localSettings.CHeader = Columns.Select(p => p.Header).ToList();
                 localSettings.Field = Columns.Select(p => p.Field).ToList();
                 localSettings.Settings = new List<int> { SearchUseChB.IsChecked.Value ? 1 : 0, OriginTableCmB.SelectedIndex, ObjSortChB.IsChecked.Value ? 1 : 0 };
+                localSettings.PPRCustomMonth = Convert.ToInt32(PPRMonthTxt.Text);
+                localSettings.PPRCustomYear = Convert.ToInt32(PPRYearTxt.Text);
             }));
             EClass.Export(localSettings);
             Dispatcher.Invoke(new Action(() =>
@@ -108,6 +117,12 @@ namespace Metr._Windows
             else
                 e.Handled = true;
         }
+
+        private void PPRYearTxt_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
+        }
     }
 
     public class ComboBoxSelectedItemConverter : IValueConverter
@@ -115,7 +130,7 @@ namespace Metr._Windows
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is int)
-            {
+            {                    
                 return EClass.converted[(int)value < EClass.converted.Count ? (int)value : 0];
             }
 

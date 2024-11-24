@@ -1,5 +1,4 @@
-﻿
-<Window x:Class="Metr._Windows.ExportWindow"
+﻿<Window x:Class="Metr._Windows.ExportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,23 +6,23 @@
         xmlns:local="clr-namespace:Metr._Windows"
         xmlns:ecl="clr-namespace:Metr.Classes"
         mc:Ignorable="d"
-        Title="Экспорт" Height="412" Width="478">
+        Title="Экспорт" Height="507" Width="478">
     <Window.Resources>
         <local:ComboBoxSelectedItemConverter x:Key="ComboBoxSelectedItemConverter"/>
         <ecl:EClass x:Key="Eclass"/>
     </Window.Resources>
     <Viewbox VerticalAlignment="Top">
-        <StackPanel Margin="5" CanVerticallyScroll="True" Height="320">
+        <StackPanel CanVerticallyScroll="True" Height="395">
             <ProgressBar x:Name="loadingProgress" IsIndeterminate="True" Height="20" Visibility="Collapsed"/>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Вид экспорта"/>
                 <ComboBox x:Name="TableTypeCmB" Width="200" SelectionChanged="TableTypeCmB_SelectionChanged"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="2">
                 <CheckBox VerticalAlignment="Center" x:Name="SearchUseChB"/>
                 <Label Content="С учётом выборки (Результаты поиска в главном окне)"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="2">
                 <Label Content="Из таблицы"/>
                 <ComboBox  IsEnabled="False" x:Name="OriginTableCmB" SelectedIndex="0" Width="100">
                     <ComboBoxItem Content="Все"/>
@@ -32,12 +31,31 @@
                     <ComboBoxItem Content="Исключённые"/>
                 </ComboBox>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" Margin="2">
                 <CheckBox VerticalAlignment="Center" x:Name="ObjSortChB"/>
                 <Label Content="Разделение приборов по объектам"/>
             </StackPanel>
-            <Label Content="Выбранные столбцы"/>
-            <DataGrid Width="400" Height="150" x:Name="ColumnsDG" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True">
+            <StackPanel Orientation="Horizontal" x:Name="PPRStack" Margin="2">
+                <Label Content="Месяц ППР"/>
+                <ComboBox x:Name="PPRMonthTxt" Margin="1" Width="45">
+                    <TextBlock Width="40" Text="1"/>
+                    <TextBlock Width="40" Text="2"/>
+                    <TextBlock Width="40" Text="3"/>
+                    <TextBlock Width="40" Text="4"/>
+                    <TextBlock Width="40" Text="5"/>
+                    <TextBlock Width="40" Text="6"/>
+                    <TextBlock Width="40" Text="7"/>
+                    <TextBlock Width="40" Text="8"/>
+                    <TextBlock Width="40" Text="9"/>
+                    <TextBlock Width="40" Text="10"/>
+                    <TextBlock Width="40" Text="11"/>
+                    <TextBlock Width="40" Text="12"/>
+                </ComboBox>
+                <Label Content="Год ППР"/>
+                <TextBox x:Name="PPRYearTxt" Margin="1" Width="60" PreviewTextInput="PPRYearTxt_PreviewTextInput" TextAlignment="Justify"/>
+            </StackPanel>
+            <Label Content="Выбранные столбцы" />
+            <DataGrid Width="400" Height="150" Margin="2" x:Name="ColumnsDG" CanUserSortColumns="False" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Заголовок" Width="190" Binding="{Binding Header}"/>
                     <DataGridTemplateColumn Header="Поле" Width="190">
@@ -53,7 +71,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
-                
+
             </DataGrid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <Button x:Name="saveBtn" Click="saveBtn_Click" Content="💾" Background="Transparent" FontSize="20"/>

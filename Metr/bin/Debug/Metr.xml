@@ -172,7 +172,7 @@
             <param name="pprYear">Если 0, приравнивается к текущему году. По умолчанию = 0 (выбирает год текущей даты)</param>
             <returns>Возвращает deviceList содержащий все приборы в БД</returns>
         </member>
-        <member name="M:Metr.Classes.DeviceData.Search(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.DateTime,System.DateTime,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:Metr.Classes.DeviceData.Search(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.DateTime,System.DateTime,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Int32,System.Int32)">
             <summary>
             Метод поиска приборов в БД
             </summary>

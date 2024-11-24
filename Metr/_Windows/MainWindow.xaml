@@ -19,7 +19,7 @@
                 <MenuItem Header="Доп. функции">
                     <MenuItem Header="Пользователи" x:Name="userBtn" Click="userBtn_Click"/>
                     <MenuItem Header="Журнал действий" x:Name="journalBtn" Click="journalBtn_Click"/>
-                    <MenuItem Header="Изменение объектов" x:Name="objactBtn" Click="objactBtn_Click"/>
+                    <MenuItem Header="Изменение объектов(В разработке)" x:Name="objactBtn" Click="objactBtn_Click" />
                 </MenuItem>
                 <Separator/>
                 <MenuItem x:Name="chUserBtn" Header="Редактировать уч. запись" Click="chUserBtn_Click"/>

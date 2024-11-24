@@ -23,29 +23,36 @@ namespace Metr.Classes
     {
         public static List<string> converted { get; } = new List<string>()
         {
-            "Пусто",
-            "Порядковый номер",
-            "Название прибора",
-            "Заводской номер",
-            "Объект",
-            "Измеряемый параметр",
-            "Единицы измерения",
-            "МП (Срок годности)",
-            "ППР (Только текущий месяц)",
-            "МП/ППР 1",
-            "ППР 1",
-            "ППР 2",
-            "ППР 3",
-            "ППР 4",
-            "Период ППР",
-            "Примечания"
+            "Пусто",                        //0
+            "Порядковый номер",             //1
+            "Название прибора",             //2
+            "Заводской номер",              //3
+            "Объект",                       //4
+            "Измеряемый параметр",          //5
+            "Единицы измерения",            //6
+            "МП (Срок годности)",           //7
+            "ППР (Выбранный месяц)",        //8
+            "МП/ППР 1",                     //9
+            "ППР 1",                        //10
+            "ППР 2",                        //11
+            "ППР 3",                        //12
+            "ППР 4",                        //13
+            "Период ППР",                   //14
+            "Примечания"                    //15
         };
 
 
         public string Name { get; set; }
         public List<string> CHeader { get; set; }
         public List<int> Field { get; set; }
-        public List<int> Settings { get; set; }
+        public List<int> Settings { get; set; } 
+        /* состоит из трёх значений: 
+         * использование поиска (0 - все приборы, 1 - приборы найденные по критериям до экспорта) 
+         * из какой вкладки делается экспорт (0 - из всех, 1-3 -> "Приборы", "ППР", "Исключенные")
+         * группировка по объектам (0 - без группировки, 1 - с группировкой)
+         */
+        public int PPRCustomYear { get; set; }
+        public int PPRCustomMonth { get; set; }
 
         public static List<EClass> Presets { get; set; }
 
@@ -57,8 +64,8 @@ namespace Metr.Classes
             new EClass()
             {
                 Name = "ППР на год",
-                CHeader = new List<string> { "Объект", "Название", "Метрологические данные", "Заводской номер", "Измеряемый параметр", "МП/ППР1", "ППР2", "ППР3", "ППР4" },
-                Field = new List<int> { 4, 2, 6, 3, 5, 9, 11, 12, 13 },
+                CHeader = new List<string> { "Объект", "Название", "Метрологические данные", "Заводской номер", "Измеряемый параметр", "МП", "ППР1", "ППР2", "ППР3", "ППР4" },
+                Field = new List<int> { 4, 2, 6, 3, 5, 7, 10, 11, 12, 13 },
                 Settings = new List<int> { 0, 2, 1 }
             },
 
@@ -121,7 +128,7 @@ namespace Metr.Classes
 
                 if (settings.Settings[0] == 0)
                 {
-                    DeviceData.Search(new List<string>() { "", "" }, new List<string>() { }, DateTime.MinValue, DateTime.MaxValue, false, false, settings.Field.Contains(8));
+                    DeviceData.Search(new List<string>() { "", "" }, new List<string>() { }, DateTime.MinValue, DateTime.MaxValue, false, false, settings.Field.Contains(8), false, settings.PPRCustomMonth, settings.PPRCustomYear);
                 }
 
                 switch (settings.Settings[1])
@@ -150,7 +157,7 @@ namespace Metr.Classes
 
             devs = devs.OrderBy(x => x.ExpDate).ThenBy(x => x.ObjectName).ThenBy(x => x.Name).ToList();
 
-            if (settings.Field.Contains(8)) devs = devs.OrderByDescending(x => x.pprMonthDate).ToList();
+            if (settings.Field.Contains(8)) devs = devs.OrderBy(x => x.pprMonthDate).ToList();
 
             string save = "";
 
@@ -165,7 +172,7 @@ namespace Metr.Classes
                         foreach (List<DeviceData> devices in devs.GroupBy(d => d.ObjectName).Select(grp => grp.ToList()))
                         {
 
-                            save = Path.GetDirectoryName(saveFileDialog.FileName) + "\\import\\";
+                            save = Path.GetDirectoryName(saveFileDialog.FileName) + "\\export\\";
                             Directory.CreateDirectory(save);
 
                             string fName = devices[0].ObjectName;
